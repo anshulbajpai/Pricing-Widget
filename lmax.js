@@ -26,6 +26,7 @@ var xhr;
 var xhrCounter = 1;
 var baseUrl = "http://marketdata.lmaxtrader.com/";
 var pollUrl = baseUrl + "longPoll/";
+var pricingLadder = new PricingLadder();
 
 function longPollCallback()
 {
@@ -194,7 +195,7 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 	instrumentIdentifierSpan.innerHTML = instrument.orderBookId;
 	tableCell.appendChild(document.createTextNode(instrument.commonName));
 	tableCell.onclick = function(){
-		alert(this.children[1].innerHTML);
+		pricingLadder.showLadderFor(this.children[1].innerHTML);
 	};
 
 	tableCell = document.createElement("td");
