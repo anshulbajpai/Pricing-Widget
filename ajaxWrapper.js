@@ -1,6 +1,6 @@
 var AjaxWrapper = function(){};
 
-AjaxWrapper.prototype.sendRequest = function(url, successCallBack, postParameters){
+AjaxWrapper.prototype.sendRequest = function(url, postParameters, successCallBack, callerReference){
 	var xhr = this._createXmlHttpRequest();
 	xhr.open("POST", url, true);
 	xhr.onreadystatechange = function(){
@@ -8,7 +8,7 @@ AjaxWrapper.prototype.sendRequest = function(url, successCallBack, postParameter
 			return;
 		if (200 == xhr.status)
 		{
-			successCallBack(xhr.responseText);
+			successCallBack.call(callerReference, xhr.responseText);
 		}			
 	};
 	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");

@@ -1,15 +1,18 @@
-var PricingLadder = function(){
-	this.urlTemplate = new Url('http://marketdata.lmaxtrader.com/longPoll?orderBookId={0}&init=true');
+var PricingLadder = function(urlTemplate, ajaxWrapper, pricingLadderParser, pricingLadderRenderer){
+	this.urlTemplate = urlTemplate;
+	this.ajaxWrapper = ajaxWrapper;
+	this.pricingLadderParser = pricingLadderParser;
+	this.pricingLadderRenderer = pricingLadderRenderer;
 };
 
-PricingLadder.prototype.showLadderFor = function(id){
+PricingLadder.prototype.showPricingLadderFor = function(id){
 	this._getResponseFor(id);
 };
 
 PricingLadder.prototype._getResponseFor = function(id){
-	new AjaxWrapper().sendRequest(this.urlTemplate.randomize().format(id),this._successCallback);
+	this.ajaxWrapper.sendRequest(this.urlTemplate.randomize().format(id), "", this._successCallback, this);
 };
 
-PricingLadder.prototype._successCallback = function(responseText){
-	alert(responseText);
+PricingLadder.prototype._successCallback = function(response){
+	this.pricingLadderRenderer.render(this.pricingLadderParser.createLadderStepsFrom(response));
 };
