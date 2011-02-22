@@ -10,6 +10,21 @@ body
 	font-size: 11px;
 }
 
+.data, .ladder{
+	border-bottom: solid 1px #000;
+}
+
+.data{
+	float: left;
+	border-right: solid 1px #000;
+}
+
+.ladder{
+	float: left;
+	margin-left : 5px;
+	border-left: solid 1px #000;
+}
+
 table
 {
 	width: 445px;
@@ -94,6 +109,12 @@ td
 	background-color: #0066FF;
 	color: #FFF;
 }
+
 .hidden {
 	display : none;
+}
+
+.pricingLadderTitle{
+	border-right: 1px solid #8f8882;
+	text-align: center;
 }

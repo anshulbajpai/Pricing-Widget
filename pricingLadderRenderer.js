@@ -1,13 +1,8 @@
-var PricingLadderRenderer = function(){
-	this.currentSteps = null;
-};
+var PricingLadderRenderer = function(){};
 
 PricingLadderRenderer.prototype.render = function(steps){
-	if(!this.currentSteps)
-		this.currentSteps = steps;
 	var pricingLadder = this._getPricingLadder();
-	var resetFragment = this._createTableFragement(steps);
-	pricingLadder.replaceChild(resetFragment, pricingLadder.firstChild);
+	pricingLadder.replaceChild(this._createTableFragement(steps), pricingLadder.firstChild);
 };
 
 PricingLadderRenderer.prototype._createTableFragement = function(steps){
@@ -15,7 +10,9 @@ PricingLadderRenderer.prototype._createTableFragement = function(steps){
 	var pricingLadderTable = fragment.appendChild(document.createElement("table"));
 	pricingLadderTable.appendChild(this._createHeader());
 	for(var i = 0; i < steps.length; i++){
-		pricingLadderTable.appendChild(this._createStepRowFrom(steps[i]));
+		var stepRow = this._createStepRowFrom(steps[i]);
+		stepRow.className = (i%2 == 0 ? 'even_row' : 'odd_row');
+		pricingLadderTable.appendChild(stepRow);
 	}
 	return fragment;
 };

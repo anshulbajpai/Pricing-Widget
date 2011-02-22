@@ -234,7 +234,7 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 }
 
 function handleClickForInstrument(){
-	pricingLadder.showPricingLadderFor(this.children[1].innerHTML);
+	pricingLadder.showPricingLadderFor(this.childNodes[1].innerHTML, this.childNodes[2].data);
 }
 
 function determinePriceMovements(instruments)
