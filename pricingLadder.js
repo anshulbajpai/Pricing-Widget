@@ -10,7 +10,7 @@ PricingLadder.prototype.showPricingLadderFor = function(id){
 };
 
 PricingLadder.prototype._getResponseFor = function(id){
-	this.ajaxWrapper.sendRequest(this.urlTemplate.randomize().format(id), "", this._successCallback, this);
+	this.ajaxWrapper.sendContinousRequest(this.urlTemplate.randomize().format(id), "", this._successCallback, this);
 };
 
 PricingLadder.prototype._successCallback = function(response){

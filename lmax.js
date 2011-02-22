@@ -27,10 +27,10 @@ var xhrCounter = 1;
 var baseUrl = "http://marketdata.lmaxtrader.com/";
 var pollUrl = baseUrl + "longPoll/";
 var pricingLadderUrlTemplate = new Url('http://marketdata.lmaxtrader.com/longPoll?orderBookId={0}&init=true');
-var ajaxWrapper = new AjaxWrapper();
+var pricingLadderAjaxWrapper = new AjaxWrapper();
 var pricingLadderParser = new PricingLadderParser();
 var pricingLadderRenderer = new PricingLadderRenderer();
-var pricingLadder = new PricingLadder(pricingLadderUrlTemplate, ajaxWrapper, pricingLadderParser, pricingLadderRenderer);
+var pricingLadder = new PricingLadder(pricingLadderUrlTemplate, pricingLadderAjaxWrapper, pricingLadderParser, pricingLadderRenderer);
 
 function longPollCallback()
 {
@@ -198,10 +198,8 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 	instrumentIdentifierSpan.className = 'hidden';
 	instrumentIdentifierSpan.innerHTML = instrument.orderBookId;
 	tableCell.appendChild(document.createTextNode(instrument.commonName));
-	tableCell.onclick = function(){
-		pricingLadder.showPricingLadderFor(this.children[1].innerHTML);
-	};
-
+	tableCell.onclick = handleClickForInstrument;
+	
 	tableCell = document.createElement("td");
 	rowTag.appendChild(tableCell);
 	tableCell.appendChild(document.createTextNode(instrument.sellQty));
@@ -233,6 +231,10 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 		}
 	}
 	tableCell.setAttribute("class", spreadClasses);
+}
+
+function handleClickForInstrument(){
+	pricingLadder.showPricingLadderFor(this.children[1].innerHTML);
 }
 
 function determinePriceMovements(instruments)

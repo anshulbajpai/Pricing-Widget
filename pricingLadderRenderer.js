@@ -1,7 +1,13 @@
-var PricingLadderRenderer = function(){};
+var PricingLadderRenderer = function(){
+	this.currentSteps = null;
+};
 
 PricingLadderRenderer.prototype.render = function(steps){
-	this._getPricingLadder().replaceChild(this._createTableFragement(steps), pricingLadder.firstChild);
+	if(!this.currentSteps)
+		this.currentSteps = steps;
+	var pricingLadder = this._getPricingLadder();
+	var resetFragment = this._createTableFragement(steps);
+	pricingLadder.replaceChild(resetFragment, pricingLadder.firstChild);
 };
 
 PricingLadderRenderer.prototype._createTableFragement = function(steps){
@@ -23,21 +29,23 @@ PricingLadderRenderer.prototype._createHeader = function(step){
 };
 
 PricingLadderRenderer.prototype._createHeaderCell = function(value){
-	var headerCell = document.createElement('th');
-	headerCell.innerHTML = value;
+	var headerCell = document.createElement('td');
+	headerCell.className = "table_header";
+	headerCell.appendChild(document.createTextNode(value))
 	return headerCell;
 };
 
 PricingLadderRenderer.prototype._createStepRowFrom = function(step){
 	var stepRow = document.createElement('tr');
-	stepRow.appendChild(this._createStepCellFrom(step.buyDepth));
+	stepRow.appendChild(this._createStepCellFrom(step.buyDepth, 'buy_column'));
 	stepRow.appendChild(this._createStepCellFrom(step.price));
-	stepRow.appendChild(this._createStepCellFrom(step.sellDepth));
+	stepRow.appendChild(this._createStepCellFrom(step.sellDepth, 'sell_column'));
 	return stepRow;
 };
 
-PricingLadderRenderer.prototype._createStepCellFrom = function(value){
+PricingLadderRenderer.prototype._createStepCellFrom = function(value, className){
 	var stepCell = document.createElement('td');
+	stepCell.className = className;
 	stepCell.appendChild(document.createTextNode(value));
 	return stepCell;
 };
