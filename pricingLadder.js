@@ -6,7 +6,7 @@ var PricingLadder = function(urlTemplate, ajaxWrapper, pricingLadderParser, pric
 };
 
 PricingLadder.prototype.showPricingLadderFor = function(instrumentId, instrumentName){
-	this._getPricingLadderTitle().innerHTML = instrumentName;
+	this._instrumentName = instrumentName;
 	this._getResponseFor(instrumentId);
 };
 
@@ -15,6 +15,7 @@ PricingLadder.prototype._getResponseFor = function(instrumentId){
 };
 
 PricingLadder.prototype._successCallback = function(response){
+	this._getPricingLadderTitle().innerHTML = this._instrumentName;
 	this.pricingLadderRenderer.render(this.pricingLadderParser.createLadderStepsFrom(response));
 };
 
