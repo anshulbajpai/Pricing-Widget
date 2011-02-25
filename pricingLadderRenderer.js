@@ -19,9 +19,9 @@ PricingLadderRenderer.prototype._createTableFragement = function(steps){
 
 PricingLadderRenderer.prototype._createHeader = function(step){
 	var header = document.createElement('tr');
-	header.appendChild(this._createHeaderCell('Buy'));
+	header.appendChild(this._createHeaderCell('Bid Qty'));
 	header.appendChild(this._createHeaderCell('Price'));
-	header.appendChild(this._createHeaderCell('Sell'));
+	header.appendChild(this._createHeaderCell('Ask Qty'));
 	return header;
 };
 
@@ -34,9 +34,9 @@ PricingLadderRenderer.prototype._createHeaderCell = function(value){
 
 PricingLadderRenderer.prototype._createStepRowFrom = function(step){
 	var stepRow = document.createElement('tr');
-	stepRow.appendChild(this._createStepCellFrom(step.buyDepth, 'buy_column'));
+	stepRow.appendChild(this._createStepCellFrom(step.bidQty, 'buy_column'));
 	stepRow.appendChild(this._createStepCellFrom(step.price));
-	stepRow.appendChild(this._createStepCellFrom(step.sellDepth, 'sell_column'));
+	stepRow.appendChild(this._createStepCellFrom(step.askQty, 'sell_column'));
 	return stepRow;
 };
 
