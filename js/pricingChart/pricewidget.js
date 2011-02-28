@@ -34,6 +34,6 @@ function PriceWidget(priceChart, parser) {
     };
 
     function updateGraphData(pricePoint, max, pointId) {
-        priceChart.setDataPoint((count-1)%10, pointId, [count, pricePoint.getPrice(), pricePoint.getQuantity() / max]);
+        priceChart.setDataPoint((count-1)%50, pointId, [count, pricePoint.getPrice(), pricePoint.getQuantity() / max]);
     };
 }
