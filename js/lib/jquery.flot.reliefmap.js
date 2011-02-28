@@ -14,8 +14,9 @@
     };
     var data = null, canvas = null, target = null, axes = null, offset = null, highlights = [];
 
-    function drawPointDefault(ctx, series, x, y, alpha, c, overlay) {
-        ctx.fillStyle = data[3] ? "rgba(255, 0, 0, " + alpha + ")" : "rgba(0, 0, 2255, " + alpha + ")";
+    function drawPointDefault(ctx, series, x, y, alpha, c, overlay, isAskPoint) {
+		
+        ctx.fillStyle = isAskPoint ? "rgba(0, 0, 255, " + alpha + ")" : "rgba(255, 0, 0, " + alpha + ")";
         ctx.strokeStyle = c;
         ctx.lineWidth = series.map.lineWidth;
 
@@ -53,19 +54,19 @@
                 series = data[i];
                 if (series.map.show) {
                     for (var j = 0; j < series.data.length; j++) {
-                        drawpoint(ctx, series, series.data[j], series.color);
+                        drawpoint(ctx, series, series.data[j], series.color, j < series.data.length/2);
                     }
                 }
             }
         }
 
-        function drawpoint(ctx, series, data, c) {
+        function drawpoint(ctx, series, data, c, isAskPoint) {
             var x,y,alpha;
             x = offset.left + axes.xaxis.p2c(data[0]);
             y = offset.top + axes.yaxis.p2c(data[1]);
             alpha = data[2];
 
-            series.map.drawpoint(ctx, series, x, y, alpha, c, data);
+            series.map.drawpoint(ctx, series, x, y, alpha, c, data, isAskPoint);
         }
 
         function bindEvents(plot, eventHolder) {
