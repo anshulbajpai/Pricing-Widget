@@ -17,15 +17,17 @@ body
 .data{
 	float: left;
 	border-right: solid 1px #000;
+	clear:none;
 }
 
 .ladder{
 	float: left;
 	margin-left : 5px;
 	border-left: solid 1px #000;
+	clear:none;
 }
 
-table
+.data table
 {
 	width: 445px;
 	border-collapse: collapse;
@@ -117,4 +119,9 @@ td
 .pricingLadderTitle{
 	border-right: 1px solid #8f8882;
 	text-align: center;
+}
+
+.pricingLadder table{
+	width : 220px;
+	border-collapse: collapse;
 }
