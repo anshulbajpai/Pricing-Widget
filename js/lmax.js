@@ -32,6 +32,8 @@ var pricingLadderParser = new PricingLadderParser();
 var pricingLadderRenderer = new PricingLadderRenderer();
 var pricingLadder = new PricingLadder(pricingLadderUrlTemplate, pricingLadderAjaxWrapper, pricingLadderParser, pricingLadderRenderer);
 
+var priceWidget = null; 
+
 function longPollCallback()
 {
 	if (!xhr || 4 != xhr.readyState)
@@ -47,28 +49,7 @@ function longPollCallback()
 			processResponseData(trimmedText);
 		}
 	}
-	else
-	{
-		xhr.onreadystatechange = null;
-
-		if (-1 != sendCallbackTimerId)
-		{
-			clearTimeout(sendCallbackTimerId);
-		}
-
-		sendCallbackTimerId = setTimeout(new function()
-		{
-			window.location.reload();
-		}, 1000);
-	}
-
-	xhr.onreadystatechange = null;
-
-	if (-1 != sendCallbackTimerId)
-	{
-		clearTimeout(sendCallbackTimerId);
-	}
-	sendCallbackTimerId = setTimeout(sendLongPoll, 100);
+	
 }
 
 function sendLongPoll()
@@ -82,13 +63,14 @@ function sendLongPoll()
 function startWidget()
 {
 	displayDiv = document.getElementById("data");
-
+	priceWidget = new PriceWidget(new PriceChart($("#price-chart")), new PriceDataParser());
 	xhr = createXmlHttpRequest();
 	xhr.open("POST", pollUrl, true);
 	xhr.onreadystatechange = longPollCallback;
 	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
 	xhr.send("init=true");
+	
 }
 
 function processResponseData(responseData)
