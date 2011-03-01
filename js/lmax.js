@@ -55,7 +55,7 @@ function longPollCallback()
 function sendLongPoll()
 {
 	xhr = createXmlHttpRequest();
-	xhr.open("POST", pollUrl + xhrCounter++, true);
+	xhr.open("GET", pollUrl + xhrCounter++, true);
 	xhr.onreadystatechange = longPollCallback;
 	xhr.send("");
 }
@@ -65,11 +65,10 @@ function startWidget()
 	displayDiv = document.getElementById("data");
 	priceWidget = new PriceWidget(new PriceChart($("#price-chart")), new PriceDataParser());
 	xhr = createXmlHttpRequest();
-	xhr.open("POST", pollUrl, true);
+	xhr.open("GET", pollUrl + '?init=true', true);
 	xhr.onreadystatechange = longPollCallback;
 	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-	xhr.send("init=true");
+	xhr.send("");
 	
 }
 

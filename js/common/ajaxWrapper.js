@@ -4,7 +4,7 @@ var AjaxWrapper = function(){
 
 AjaxWrapper.prototype.sendContinousRequest = function(url, postParameters, successCallBack, callerReference){
 	var xhr = this._createXmlHttpRequest();
-	xhr.open("POST", url, true);
+	xhr.open("GET", url, true);
 	var that = this;
 	xhr.onreadystatechange = function(){
 		if (4 != xhr.readyState)
