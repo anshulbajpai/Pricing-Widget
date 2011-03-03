@@ -1,8 +1,20 @@
 var PricingLadderRenderer = function(){};
 
-PricingLadderRenderer.prototype.render = function(steps){
-	var pricingLadder = this._getPricingLadder();
-	pricingLadder.replaceChild(this._createTableFragement(steps), pricingLadder.firstChild);
+PricingLadderRenderer.prototype.render = function(parsedResponse){
+	this._updatePricingLadderTitle(parsedResponse.title);
+	this._updatePricingLadder(parsedResponse.steps);
+};
+
+PricingLadderRenderer.prototype._updatePricingLadder = function(steps){
+	this._getPricingLadder().replaceChild(this._createTableFragement(steps), pricingLadder.firstChild);
+};
+
+PricingLadderRenderer.prototype._updatePricingLadderTitle = function(title){
+	this._getPricingLadderTitle().innerHTML = title;
+};
+
+PricingLadderRenderer.prototype._getPricingLadderTitle = function(){
+	return document.getElementById('pricingLadderTitle');
 };
 
 PricingLadderRenderer.prototype._createTableFragement = function(steps){

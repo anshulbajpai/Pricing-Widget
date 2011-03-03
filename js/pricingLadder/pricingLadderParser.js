@@ -1,14 +1,14 @@
 var PricingLadderParser = function(){};
 
 PricingLadderParser.prototype.createLadderStepsFrom = function(response){
-	var ladderStepsResponse = this._getLadderStepsResponseFrom(response);
-	var bidSteps =  this._createLadderStepsFrom(ladderStepsResponse[0], true);
-	var askSteps = this._createLadderStepsFrom(ladderStepsResponse[1], false);
-	return askSteps.reverse().concat(bidSteps);
+	var parsedResponse = this._getParsedResponseFrom(response);
+	var bidSteps =  this._createLadderStepsFrom(parsedResponse[1], true);
+	var askSteps = this._createLadderStepsFrom(parsedResponse[2], false);
+	return {title : parsedResponse[0], steps : askSteps.reverse().concat(bidSteps)};
 };
 
-PricingLadderParser.prototype._getLadderStepsResponseFrom = function(response){
-	return response.split('|').slice(3);
+PricingLadderParser.prototype._getParsedResponseFrom = function(response){
+	return response.split('|').slice(2);
 };
 
 PricingLadderParser.prototype._createLadderStepsFrom = function(ladderResponse, isBidStep){

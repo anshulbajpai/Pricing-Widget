@@ -26,13 +26,15 @@ var xhr;
 var xhrCounter = 1;
 var baseUrl = "http://marketdata.lmaxtrader.com/";
 var pollUrl = baseUrl + "longPoll/";
-var pricingLadderUrlTemplate = new Url('http://marketdata.lmaxtrader.com/longPoll?orderBookId={0}&init=true');
-var pricingLadderAjaxWrapper = new AjaxWrapper();
-var pricingLadderParser = new PricingLadderParser();
-var pricingLadderRenderer = new PricingLadderRenderer();
-var pricingLadder = new PricingLadder(pricingLadderUrlTemplate, pricingLadderAjaxWrapper, pricingLadderParser, pricingLadderRenderer);
 
-var priceWidget = null; 
+var pricingLadderWidget = new PricingLadderWidget(new PricingLadderParser(), new PricingLadderRenderer());
+var priceChartWidget = new PriceChartWidget(new PriceChart("#price-chart"), new PriceChartParser());
+
+var pricingUrlTemplate = new Url(pollUrl + '?orderBookId={0}&init=true');
+var pricingAjaxWrapper = new AjaxWrapper();
+var priceWidgets =  new PriceWidgets([pricingLadderWidget, priceChartWidget]);
+
+var priceWidgetController = new PriceWidgetController(pricingUrlTemplate, pricingAjaxWrapper, priceWidgets);
 
 function longPollCallback()
 {
@@ -63,13 +65,11 @@ function sendLongPoll()
 function startWidget()
 {
 	displayDiv = document.getElementById("data");
-	priceWidget = new PriceWidget(new PriceChart($("#price-chart")), new PriceDataParser());
 	xhr = createXmlHttpRequest();
 	xhr.open("GET", pollUrl + '?init=true', true);
 	xhr.onreadystatechange = longPollCallback;
 	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhr.send("");
-	
 }
 
 function processResponseData(responseData)
@@ -215,7 +215,7 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 }
 
 function handleClickForInstrument(){
-	pricingLadder.showPricingLadderFor(this.childNodes[1].innerHTML, this.childNodes[2].data);
+	priceWidgetController.show(this.childNodes[1].innerHTML, this.childNodes[2].data);
 }
 
 function determinePriceMovements(instruments)

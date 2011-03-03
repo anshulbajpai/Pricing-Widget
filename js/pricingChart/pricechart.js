@@ -1,6 +1,7 @@
 var PriceChart = function (containerId) {
     this.data = [];
     this.containerId = containerId;
+	this.options = {series : { map: { pointDimension: 5, active: true, show: true}}};
 };
 
 PriceChart.prototype.setDataPoint = function(seriesNumber, pointId, dataPoint) {
@@ -19,10 +20,6 @@ PriceChart.prototype.reset = function(){
 };
 
 PriceChart.prototype.drawChart = function() {
-	var options = {
-		series : {
-			map: { pointDimension: 5, active: true, show: true}
-		}                        
-	};
-	$.plot($(this.containerId), this.data, options);
+
+	$.plot($(this.containerId), this.data, this.options);
 };
