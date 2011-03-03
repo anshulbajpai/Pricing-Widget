@@ -1,25 +1,25 @@
-function PriceDataParser() {
-    this.parse = function(data) {
+var PriceDataParser = function() {};
+
+PriceDataParser.prototype.parse = function(data) {
         var dataParts = data.split('|');
 
-        var bidData = parsePriceData(dataParts[3]);
-        var askData = parsePriceData(dataParts[4]);
+        var bidData = this._parsePriceData(dataParts[3]);
+        var askData = this._parsePriceData(dataParts[4]);
 
-        return new PricePointData(bidData, askData)
-    };
+        return { bidData: bidData, askData: askData };
+};
 
-    function parsePriceData(priceDataString) {
+PriceDataParser.prototype._parsePriceData = function(priceDataString) {
         var priceDataPoints = priceDataString.split(';');
 
         var pricePoints = [];
 		for(var i =0; i< priceDataPoints.length; i++){
-			pricePoints.push(parsePricePoint(priceDataPoints[i]));
+			pricePoints.push(this._parsePricePoint(priceDataPoints[i]));
 		}
         return pricePoints;
     };
 
-    function parsePricePoint(pricePointString) {
+PriceDataParser.prototype._parsePricePoint = function(pricePointString) {
         var pricePoint = pricePointString.split('@');
-        return new PricePoint(parseInt(pricePoint[0]), parseFloat(pricePoint[1]));
-    };
-}
+        return { quantity: parseInt(pricePoint[0]), price: parseFloat(pricePoint[1]) };
+};

@@ -1,39 +1,41 @@
-function PriceWidget(priceChart, parser) {
-    var count = 0;
+var PriceWidget = function (priceChart, parser) {
+    this.count = 0;
+	this.priceChart = priceChart;
+	this.parser = parser;
+};
 
-    this.updateGraph = function(data) {
-        var priceData = parser.parse(data);
-        var askData = priceData.getAskData();
-        var bidData = priceData.getBidData();
-        ++count;
-        var maxBidQuantity = getMaxQuantity(bidData);
-        var maxAskQuantity = getMaxQuantity(askData);
-		for(var i =0; i < bidData.length; i++){
-			updateGraphData(bidData[i], maxBidQuantity, i);
-		}
-		for(var j = 0; j < askData.length; j++){
-			updateGraphData(askData[j], maxAskQuantity, i+j);
-		}
-        priceChart.drawChart();
-    };
+PriceWidget.prototype.updateGraph = function(data) {
+	var priceData = this.parser.parse(data);
+	var askData = priceData.askData;
+	var bidData = priceData.bidData;
+	++this.count;
+	var maxBidQuantity = this._getMaxQuantity(bidData);
+	var maxAskQuantity = this._getMaxQuantity(askData);
+	for(var i =0; i < bidData.length; i++){
+		this._updateGraphData(bidData[i], maxBidQuantity, i, false);
+	}
+	for(var j = 0; j < askData.length; j++){
+		this._updateGraphData(askData[j], maxAskQuantity, i+j, true);
+	}
+	this.priceChart.drawChart();
+};
 	
-	this.resetGraph = function(){
-		count = 0;
-		priceChart.reset();
-	};
+PriceWidget.prototype.resetGraph = function(){
+	this.count = 0;
+	this.priceChart.reset();
+};
 
-    function getMaxQuantity(dataArray) {
-        var max = 0;
-        for (var i = 0; i < dataArray.length; i++) {
-            var priceData = dataArray[i];
-            if (priceData.getQuantity() > max) {
-                max = priceData.getQuantity();
-            }
-        }
-        return max;
-    };
+PriceWidget.prototype._getMaxQuantity = function(dataArray) {
+	var max = 0;
+	for (var i = 0; i < dataArray.length; i++) {
+		var priceData = dataArray[i];
+		if (priceData.quantity > max) {
+			max = priceData.quantity;
+		}
+	}
+	return max;
+};
 
-    function updateGraphData(pricePoint, max, pointId) {
-        priceChart.setDataPoint((count-1)%50, pointId, [count, pricePoint.getPrice(), pricePoint.getQuantity() / max]);
-    };
-}
+PriceWidget.prototype._updateGraphData = function(pricePoint, max, pointId, isAskPoint) {
+	this.priceChart.setDataPoint((this.count-1)%50, pointId, [this.count, pricePoint.price, pricePoint.quantity / max, isAskPoint]);
+};
