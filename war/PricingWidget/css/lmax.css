@@ -39,11 +39,11 @@ body
 }
 
 .instrument_column:hover {
-	background-color: red;
+	background-color: grey;
 }
 
 .selected_instrument{
-	background-color: red;
+	background-color: brown;
 }
 
 td

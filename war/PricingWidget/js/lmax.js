@@ -36,8 +36,7 @@ var priceWidgets =  new PriceWidgets([pricingLadderWidget, priceChartWidget]);
 
 var priceWidgetController = new PriceWidgetController(pricingUrlTemplate, pricingAjaxWrapper, priceWidgets);
 
-var selectedInstrumentId = null;
-
+var selectedInstrument = null;
 
 function longPollCallback()
 {
@@ -194,7 +193,7 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 
 	var tableCell = document.createElement("td");
 	tableCell.setAttribute("class", "instrument_column");
-	if(instrument.orderBookId == selectedInstrumentId)
+	if(selectedInstrument && instrument.orderBookId == selectedInstrument.childNodes[1].innerHTML)
 		tableCell.className += " selected_instrument";
 	rowTag.appendChild(tableCell);
 	var rowImg = document.createElement("img");
@@ -241,9 +240,12 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 }
 
 function handleClickForInstrument(){
-	selectedInstrumentId = this.childNodes[1].innerHTML;
-	this.className += " selected_instrument";
-	priceWidgetController.show(selectedInstrumentId);
+
+	if(selectedInstrument)
+		selectedInstrument.className.replace(" selected_instrument","")
+	selectedInstrument = this;
+	selectedInstrument.className += " selected_instrument";
+	priceWidgetController.show(selectedInstrument.childNodes[1].innerHTML);
 }
 
 function determinePriceMovements(instruments)
