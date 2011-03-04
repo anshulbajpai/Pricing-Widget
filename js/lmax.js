@@ -51,13 +51,34 @@ function longPollCallback()
 			processResponseData(trimmedText);
 		}
 	}
-	
+	else
+	{
+		xhr.onreadystatechange = null;
+
+		if (-1 != sendCallbackTimerId)
+		{
+			clearTimeout(sendCallbackTimerId);
+		}
+
+		sendCallbackTimerId = setTimeout(new function()
+		{
+			window.location.reload();
+		}, 1000);
+	}
+
+	xhr.onreadystatechange = null;
+
+	if (-1 != sendCallbackTimerId)
+	{
+		clearTimeout(sendCallbackTimerId);
+	}
+	sendCallbackTimerId = setTimeout(sendLongPoll, 100);
 }
 
 function sendLongPoll()
 {
 	xhr = createXmlHttpRequest();
-	xhr.open("GET", pollUrl + xhrCounter++, true);
+	xhr.open("GET", '../pricewidget?url=' + pollUrl + xhrCounter++, true);
 	xhr.onreadystatechange = longPollCallback;
 	xhr.send("");
 }
@@ -66,7 +87,7 @@ function startWidget()
 {
 	displayDiv = document.getElementById("data");
 	xhr = createXmlHttpRequest();
-	xhr.open("GET", pollUrl + '?init=true', true);
+	xhr.open("GET", '../pricewidget?url=' + pollUrl + '&init=true', true);
 	xhr.onreadystatechange = longPollCallback;
 	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhr.send("");
