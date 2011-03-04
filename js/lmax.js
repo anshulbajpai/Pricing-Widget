@@ -215,7 +215,7 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 }
 
 function handleClickForInstrument(){
-	priceWidgetController.show(this.childNodes[1].innerHTML, this.childNodes[2].data);
+	priceWidgetController.show(this.childNodes[1].innerHTML);
 }
 
 function determinePriceMovements(instruments)

@@ -4,10 +4,9 @@ var PriceWidgetController = function(urlTemplate, ajaxWrapper, priceWidgets){
 	this.priceWidgets = priceWidgets;
 };
 
-PriceWidgetController.prototype.show = function(instrumentId, instrumentName){
-	this._instrumentName = instrumentName;
-	this._getResponseFor(instrumentId);
+PriceWidgetController.prototype.show = function(instrumentId){
 	this.priceWidgets.reset();
+	this._getResponseFor(instrumentId);
 };
 
 PriceWidgetController.prototype._getResponseFor = function(instrumentId){
