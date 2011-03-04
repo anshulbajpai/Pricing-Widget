@@ -1,42 +1,29 @@
 var AjaxWrapper = function(){
-	this.isTimerRunning = -1;
+	this.timerId = -1;
 };
 
-AjaxWrapper.prototype.sendContinousRequest = function(urlProvider, postParameters, successCallBack, callerReference){
-	var xhr = this._createXmlHttpRequest();
-	var url = urlProvider.call(callerReference);
-	xhr.open("GET", '../priceWidget?url=' + url, true);
+AjaxWrapper.prototype.sendContinousRequest = function(url, successCallBack, callerReference){	
+	this._sendContinousRequest(url, successCallBack, callerReference);
+};
+
+AjaxWrapper.prototype._sendContinousRequest = function(url, successCallBack, callerReference){	
 	var that = this;
-	xhr.onreadystatechange = function(){
-		if (4 != xhr.readyState)
-			return;
-		if (200 == xhr.status)
-		{
-			var trimmedText = xhr.responseText.trim();
-			if (trimmedText.length > 0)
-			{
-				successCallBack.call(callerReference, trimmedText);
-			}			
-		}
-		xhr.onreadystatechange = null;
-		if (-1 != that.isTimerRunning)
-		{
-			clearTimeout(that.isTimerRunning);
-			that.isTimerRunning = -1;
-		}
-		that.isTimerRunning = setTimeout(function(){ that.sendContinousRequest(urlProvider, postParameters, successCallBack, callerReference);}, 1000);
-	};
-	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhr.send(postParameters);
-};
-
-AjaxWrapper.prototype._createXmlHttpRequest = function()
-{
-	if (window.XMLHttpRequest)
-	{
-		return new window.XMLHttpRequest();
-	}
-	try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch(e) {}
-	alert("XMLHttpRequest not supported");
-	return null;
+	$.ajax({
+		   url:        '../priceWidget?url=' + url,
+		   type:       "GET",
+		   dataType:   "text",
+		   complete: function(xhr){
+				if (-1 != that.timerId)
+				{
+					clearTimeout(that.timerId);
+				}
+				that.timerId = setTimeout(function(){
+		    		   that._sendContinousRequest(url, successCallBack, callerReference);
+		    	},1000);		       
+		   },
+		   success:    function(data){
+			   successCallBack.call(callerReference, data);
+		   }		   
+	});
+	
 };

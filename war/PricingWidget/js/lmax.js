@@ -240,7 +240,6 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 }
 
 function handleClickForInstrument(){
-
 	if(selectedInstrument)
 		selectedInstrument.className.replace(" selected_instrument","")
 	selectedInstrument = this;
