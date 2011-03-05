@@ -15,5 +15,9 @@ Url.prototype.format = function() {
     for(var i = 0; i < arguments.length; i++) {
         formatted = formatted.replace("{" + i + "}", arguments[i]);
     }
-    return formatted;
+    return new Url(formatted);
+};
+
+Url.prototype.value = function() {    
+    return url;
 };

@@ -3,6 +3,10 @@ var AjaxWrapper = function(){
 };
 
 AjaxWrapper.prototype.sendContinousRequest = function(url, successCallBack, callerReference){	
+	if (-1 != this.timerId)
+	{
+		clearTimeout(this.timerId);
+	}
 	this._sendContinousRequest(url, successCallBack, callerReference);
 };
 

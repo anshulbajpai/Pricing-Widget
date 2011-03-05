@@ -4,6 +4,7 @@ var PricingLadderWidget = function(pricingLadderParser, pricingLadderRenderer){
 };
 
 PricingLadderWidget.prototype.reset = function(){
+	this.pricingLadderRenderer.reset();
 };
 
 PricingLadderWidget.prototype.update = function(response){

@@ -1,27 +1,25 @@
 var PriceChart = function (containerId) {
-    this.data = [];
+    this.data = new PriceChartData();
     this.containerId = containerId;
-	this.options = {
-						series : { map: { pointDimension: 5, active: true, show: true}},
-						yaxis  : { ticks: 10 },
-					};
+	this.options = {series : { map: { pointDimension: 5, active: true, show: true}}};	
 };
 
 PriceChart.prototype.setDataPoint = function(seriesNumber, pointId, dataPoint) {
-	if(this.data[seriesNumber] == null)
-		this.data[seriesNumber] = [];
-	if(this.data[seriesNumber][pointId] == null)	
-		this.data[seriesNumber].push(dataPoint);
-	else{
-		this.data[seriesNumber].shift();
-		this.data[seriesNumber].push(dataPoint);
-	}	
+	this.data.insert(seriesNumber, pointId, dataPoint);
 };
 	
 PriceChart.prototype.reset = function(){
-	this.data = [];
+	this.data = new PriceChartData();
 };
 
-PriceChart.prototype.drawChart = function() {
-	$.plot($(this.containerId), this.data, this.options);
+PriceChart.prototype.drawChart = function() {	
+	this.options.yaxis = {min : this.data.getMin(), max : this.data.getMax()};
+	$.plot($(this.containerId), this.data.getData(), this.options);
 };
+
+
+
+
+
+
+

@@ -60,6 +60,11 @@ PricingLadderRenderer.prototype._createStepCellFrom = function(value, className)
 	return stepCell;
 };
 
+PricingLadderRenderer.prototype.reset = function(){
+	this._getPricingLadder().firstChild.innerHTML = "";
+	this._getPricingLadderTitle().innerHTML = "";
+};
+
 PricingLadderRenderer.prototype._getPricingLadder = function(){
 	return document.getElementById('pricingLadder');
 };
