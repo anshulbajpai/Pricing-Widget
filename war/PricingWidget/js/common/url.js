@@ -19,5 +19,5 @@ Url.prototype.format = function() {
 };
 
 Url.prototype.value = function() {    
-    return url;
+    return this.url;
 };
