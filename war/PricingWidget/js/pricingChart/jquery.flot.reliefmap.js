@@ -14,9 +14,9 @@
     };
     var data = null, canvas = null, target = null, axes = null, offset = null, highlights = [];
 
-    function drawPointDefault(ctx, series, x, y, alpha, c, data) {
-        ctx.fillStyle = data[3] ? "rgba(255, 0, 0, " + alpha + ")" : "rgba(0, 0, 2255, " + alpha + ")";
-        ctx.strokeStyle = c;
+    function drawPointDefault(ctx, series, x, y, alpha, color, isAskPoint) {
+        ctx.fillStyle = isAskPoint ? "rgba(255, 0, 0, " + alpha + ")" : "rgba(0, 0, 2255, " + alpha + ")";
+        ctx.strokeStyle = color;
         ctx.lineWidth = series.map.lineWidth;
 
         ctx.beginPath();
@@ -53,19 +53,20 @@
                 series = data[i];
                 if (series.map.show) {
                     for (var j = 0; j < series.data.length; j++) {
-                        drawpoint(ctx, series, series.data[j], series.color);
+                        drawpoint(ctx, series, series.data[j], series.color, data.length);
                     }
                 }
             }
         }
 
-        function drawpoint(ctx, series, data, c) {
-            var x,y,alpha;
-            x = offset.left + axes.xaxis.p2c(data[0]);
-            y = offset.top + axes.yaxis.p2c(data[1]);
-            alpha = data[2];
-
-            series.map.drawpoint(ctx, series, x, y, alpha, c, data);
+        function drawpoint(ctx, series, data, color, noOfSeries) {
+            var x,y;
+            var extraOffSet = plot.width() - ((noOfSeries - data[0])*series.map.pointDimension) ;
+            x = offset.left + extraOffSet;
+            if(x > offset.left){
+	            y = offset.top + axes.yaxis.p2c(data[1]);
+	            series.map.drawpoint(ctx, series, x, y, data[2], color, data[3]);
+	        }
         }
 
         function bindEvents(plot, eventHolder) {

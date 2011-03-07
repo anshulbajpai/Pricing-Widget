@@ -7,8 +7,7 @@ var PriceChartWidget = function (priceChart, parser) {
 PriceChartWidget.prototype.update = function(data) {
 	var priceData = this.parser.parse(data);
 	var askData = priceData.askData;
-	var bidData = priceData.bidData;
-	++this.count;
+	var bidData = priceData.bidData;	
 	var maxBidQuantity = this._getMaxQuantity(bidData);
 	var maxAskQuantity = this._getMaxQuantity(askData);
 	for(var i =0; i < bidData.length; i++){
@@ -18,6 +17,7 @@ PriceChartWidget.prototype.update = function(data) {
 		this._updateGraphData(askData[j], maxAskQuantity, i+j, true);
 	}
 	this.priceChart.drawChart();
+	this.count++;
 };
 	
 PriceChartWidget.prototype.reset = function(){
@@ -37,5 +37,5 @@ PriceChartWidget.prototype._getMaxQuantity = function(dataArray) {
 };
 
 PriceChartWidget.prototype._updateGraphData = function(pricePoint, max, pointId, isAskPoint) {
-	this.priceChart.setDataPoint((this.count-1)%50, pointId, [this.count, pricePoint.price, pricePoint.quantity / max, isAskPoint]);
+	this.priceChart.setDataPoint(this.count, pointId, [this.count%43, pricePoint.price, pricePoint.quantity / max, isAskPoint]);
 };
