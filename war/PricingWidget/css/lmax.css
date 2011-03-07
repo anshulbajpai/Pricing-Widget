@@ -38,7 +38,7 @@ body
 	border-collapse: collapse;
 }
 
-.instrument_column:hover {
+.instrument_column_hover {
 	background-color: grey;
 }
 

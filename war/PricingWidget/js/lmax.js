@@ -204,7 +204,8 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 	instrumentIdentifierSpan.className = 'hidden';
 	instrumentIdentifierSpan.innerHTML = instrument.orderBookId;
 	tableCell.appendChild(document.createTextNode(instrument.commonName));
-	tableCell.onclick = handleClickForInstrument;
+	$(tableCell).hover(mouseEnterOnInstrument, mouseLeaveOnInstrument);
+	$(tableCell).click(handleClickForInstrument);	
 	
 	tableCell = document.createElement("td");
 	rowTag.appendChild(tableCell);
@@ -239,12 +240,29 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 	tableCell.setAttribute("class", spreadClasses);
 }
 
+function mouseEnterOnInstrument(){
+	$(this).addClass(getInstrumentHoverClass());
+}
+
+function mouseLeaveOnInstrument(){
+	$(this).removeClass(getInstrumentHoverClass());
+}
+
 function handleClickForInstrument(){
 	if(selectedInstrument)
-		selectedInstrument.className.replace(" selected_instrument","")
+		$(selectedInstrument).removeClass(getInstrumentClickClass());
 	selectedInstrument = this;
-	selectedInstrument.className += " selected_instrument";
+	$(selectedInstrument).removeClass(getInstrumentHoverClass());
+	$(selectedInstrument).addClass(getInstrumentClickClass());	
 	priceWidgetController.show(selectedInstrument.childNodes[1].innerHTML);
+}
+
+function getInstrumentHoverClass(){
+	return 'instrument_column_hover';
+}
+
+function getInstrumentClickClass(){
+	return 'selected_instrument';
 }
 
 function determinePriceMovements(instruments)
