@@ -61,8 +61,8 @@
 
         function drawpoint(ctx, series, data, color, noOfSeries) {
             var x,y;
-            var extraOffSet = plot.width() - ((noOfSeries - data[0])*series.map.pointDimension) ;
-            x = offset.left + extraOffSet;
+            var xCoord = plot.width() - ((noOfSeries - data[0])*series.map.pointDimension) ;
+            x = offset.left + xCoord;
             if(x > offset.left){
 	            y = offset.top + axes.yaxis.p2c(data[1]);
 	            series.map.drawpoint(ctx, series, x, y, data[2], color, data[3]);

@@ -37,5 +37,6 @@ PriceChartWidget.prototype._getMaxQuantity = function(dataArray) {
 };
 
 PriceChartWidget.prototype._updateGraphData = function(pricePoint, max, pointId, isAskPoint) {
-	this.priceChart.setDataPoint(this.count, pointId, [this.count%43, pricePoint.price, pricePoint.quantity / max, isAskPoint]);
+	var maxSeries = this.priceChart.MAX_SERIES;
+	this.priceChart.setDataPoint(this.count%maxSeries, pointId, [this.count%maxSeries, pricePoint.price, pricePoint.quantity / max, isAskPoint]);
 };
