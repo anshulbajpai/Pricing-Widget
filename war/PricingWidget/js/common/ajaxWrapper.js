@@ -23,7 +23,7 @@ AjaxWrapper.prototype._sendContinousRequest = function(url, successCallBack, cal
 				}
 				that.timerId = setTimeout(function(){
 		    		   that._sendContinousRequest(url, successCallBack, callerReference);
-		    	},100);		       
+		    	},1000);		       
 		   },
 		   success:    function(data){
 			   successCallBack.call(callerReference, data);

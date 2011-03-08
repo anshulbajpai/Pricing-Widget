@@ -19,8 +19,7 @@ PriceChartData.prototype._addSeriesIfNotPresent = function(seriesNumber){
 PriceChartData.prototype._shiftSeriesIfFull = function(seriesNumber, pointId){
 	if(pointId == 0 && this._hasMaxSeriesReached()){
 		this.data.shift();
-		this.data.push([]);
-		
+		this.data.push([]);		
 	}
 };
 
