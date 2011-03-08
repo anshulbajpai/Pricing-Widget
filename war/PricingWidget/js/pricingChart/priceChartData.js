@@ -4,10 +4,10 @@ var PriceChartData = function(maxSeries){
 };
 
 PriceChartData.prototype.insert = function(seriesNumber, pointId, dataPoint){
-	this._addSeriesIfNotPresent(seriesNumber);
-	this._shiftSeriesIfFull(seriesNumber, pointId);	
 	if(this._hasMaxSeriesReached())		
-		dataPoint[0] = this.maxSeries-1;		
+		dataPoint[0] = this.maxSeries;	
+	this._shiftSeriesIfFull(seriesNumber, pointId);
+	this._addSeriesIfNotPresent(seriesNumber);		
 	this.data[this.data.length -1].push(dataPoint);
 };
 
@@ -25,7 +25,23 @@ PriceChartData.prototype._shiftSeriesIfFull = function(seriesNumber, pointId){
 
 PriceChartData.prototype._hasMaxSeriesReached = function(){
 	return this.data.length == this.maxSeries;
-}
+};
+
+PriceChartData.prototype.getPriceBound = function(){
+	var max = 0;
+	var min = 1000000;
+	for(var i=0; i < this.data.length; i++){
+		for(var j = 0; j < this.data[i].length; j++){
+			var price = this.data[i][j][1];
+			if(price > max)
+				max = price;
+			if(price < min)
+				min = price;
+		}
+	}
+	var spreadAverage = (max - min)/(max + min);
+	return {min  : min - spreadAverage, max : max + spreadAverage};
+};
 
 PriceChartData.prototype.getData = function(){
 	if(this._hasMaxSeriesReached()){
