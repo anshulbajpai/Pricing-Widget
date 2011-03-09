@@ -27,14 +27,15 @@ var xhrCounter = 1;
 var baseUrl = "http://marketdata.lmaxtrader.com/";
 var pollUrl = baseUrl + "longPoll/";
 
-var pricingLadderWidget = new PricingLadderWidget(new PricingLadderParser(), new PricingLadderRenderer());
-var priceChartWidget = new PriceChartWidget(new PriceChart("#price-chart"), new PriceChartParser());
+var pricingLadderWidget = new PricingLadderWidget(new PricingLadderRenderer());
+var priceChartWidget = new PriceChartWidget(new PriceChart("#price-chart"));
 
 var pricingUrlTemplate = new Url(pollUrl + '?orderBookId={0}&init=true');
 var pricingAjaxWrapper = new AjaxWrapper();
+var pricingDataParser = new PricingDataParser();
 var priceWidgets =  new PriceWidgets([pricingLadderWidget, priceChartWidget]);
 
-var priceWidgetController = new PriceWidgetController(pricingUrlTemplate, pricingAjaxWrapper, priceWidgets);
+var priceWidgetController = new PriceWidgetController(pricingUrlTemplate, pricingAjaxWrapper, pricingDataParser, priceWidgets);
 
 var selectedInstrument = null;
 

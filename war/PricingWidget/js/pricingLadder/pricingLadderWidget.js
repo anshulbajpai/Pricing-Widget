@@ -1,5 +1,4 @@
-var PricingLadderWidget = function(pricingLadderParser, pricingLadderRenderer){
-	this.pricingLadderParser = pricingLadderParser;
+var PricingLadderWidget = function(pricingLadderRenderer){
 	this.pricingLadderRenderer = pricingLadderRenderer;
 };
 
@@ -7,7 +6,7 @@ PricingLadderWidget.prototype.reset = function(){
 	this.pricingLadderRenderer.reset();
 };
 
-PricingLadderWidget.prototype.update = function(response){
-	this.pricingLadderRenderer.render(this.pricingLadderParser.createLadderStepsFrom(response));
+PricingLadderWidget.prototype.update = function(pricingData){
+	this.pricingLadderRenderer.render(pricingData);
 };
 

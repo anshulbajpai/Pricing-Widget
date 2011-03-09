@@ -1,13 +1,15 @@
 var PricingLadderRenderer = function(){};
 
-PricingLadderRenderer.prototype.render = function(parsedResponse){
-	this._updatePricingLadderTitle(parsedResponse.title);
-	this._updatePricingLadder(parsedResponse.steps);
+PricingLadderRenderer.prototype.render = function(pricingData){
+	var askSteps = pricingData.askData.reverse();
+	var bidSteps = pricingData.bidData;
+	this._updatePricingLadderTitle(pricingData.title);
+	this._updatePricingLadder(askSteps, bidSteps);
 };
 
-PricingLadderRenderer.prototype._updatePricingLadder = function(steps){
+PricingLadderRenderer.prototype._updatePricingLadder = function(askSteps, bidSteps){
 	var pricingLadder = this._getPricingLadder();
-	pricingLadder.replaceChild(this._createTableFragement(steps), pricingLadder.firstChild);
+	pricingLadder.replaceChild(this._createTableFragement(askSteps, bidSteps), pricingLadder.firstChild);
 };
 
 PricingLadderRenderer.prototype._updatePricingLadderTitle = function(title){
@@ -18,16 +20,20 @@ PricingLadderRenderer.prototype._getPricingLadderTitle = function(){
 	return document.getElementById('pricingLadderTitle');
 };
 
-PricingLadderRenderer.prototype._createTableFragement = function(steps){
+PricingLadderRenderer.prototype._createTableFragement = function(askSteps, bidSteps){
 	var fragment = document.createDocumentFragment();
 	var pricingLadderTable = fragment.appendChild(document.createElement("table"));
 	pricingLadderTable.appendChild(this._createHeader());
-	for(var i = 0; i < steps.length; i++){
-		var stepRow = this._createStepRowFrom(steps[i]);
-		stepRow.className = (i%2 == 0 ? 'even_row' : 'odd_row');
-		pricingLadderTable.appendChild(stepRow);
-	}
+	this._createStepsFrom(askSteps, true, pricingLadderTable);
+	this._createStepsFrom(bidSteps, false, pricingLadderTable);	
+	this._decorateLadderSteps(pricingLadderTable.children)
 	return fragment;
+};
+
+PricingLadderRenderer.prototype._decorateLadderSteps = function(pricingLadderRows){
+	for(var i =0; i < pricingLadderRows.length; i++){
+		pricingLadderRows[i].className = (i%2 == 0 ? 'even_row' : 'odd_row');
+	}
 };
 
 PricingLadderRenderer.prototype._createHeader = function(step){
@@ -45,11 +51,25 @@ PricingLadderRenderer.prototype._createHeaderCell = function(value){
 	return headerCell;
 };
 
-PricingLadderRenderer.prototype._createStepRowFrom = function(step){
+PricingLadderRenderer.prototype._createStepsFrom = function(steps, isAskSteps, pricingLadderTable){
+	for(var i = 0; i < steps.length; i++){
+		var stepRow = this._createStepRowFrom(steps[i], isAskSteps);
+		pricingLadderTable.appendChild(stepRow);
+	}
+};
+
+PricingLadderRenderer.prototype._createStepRowFrom = function(step, isAskStep){
 	var stepRow = document.createElement('tr');
-	stepRow.appendChild(this._createStepCellFrom(step.bidQty, 'buy_column'));
-	stepRow.appendChild(this._createStepCellFrom(step.price));
-	stepRow.appendChild(this._createStepCellFrom(step.askQty, 'sell_column'));
+	if(isAskStep){
+		stepRow.appendChild(this._createEmptyStepCell());
+		stepRow.appendChild(this._createStepCellFrom(step.price));
+		stepRow.appendChild(this._createStepCellFrom(step.quantity, 'sell_column'));
+	}
+	else{
+		stepRow.appendChild(this._createStepCellFrom(step.quantity, 'buy_column'));
+		stepRow.appendChild(this._createStepCellFrom(step.price));
+		stepRow.appendChild(this._createEmptyStepCell());
+	}
 	return stepRow;
 };
 
@@ -58,6 +78,10 @@ PricingLadderRenderer.prototype._createStepCellFrom = function(value, className)
 	stepCell.className = className;
 	stepCell.appendChild(document.createTextNode(value));
 	return stepCell;
+};
+
+PricingLadderRenderer.prototype._createEmptyStepCell = function(){
+	return document.createElement('td');
 };
 
 PricingLadderRenderer.prototype.reset = function(){

@@ -1,13 +1,11 @@
-var PriceChartWidget = function (priceChart, parser) {
+var PriceChartWidget = function (priceChart) {
     this.count = 0;
 	this.priceChart = priceChart;
-	this.parser = parser;
 };
 
-PriceChartWidget.prototype.update = function(data) {
-	var priceData = this.parser.parse(data);
-	var askData = priceData.askData;
-	var bidData = priceData.bidData;	
+PriceChartWidget.prototype.update = function(pricingData) {
+	var askData = pricingData.askData;
+	var bidData = pricingData.bidData;	
 	var maxBidQuantity = this._getMaxQuantity(bidData);
 	var maxAskQuantity = this._getMaxQuantity(askData);
 	for(var i =0; i < bidData.length; i++){
