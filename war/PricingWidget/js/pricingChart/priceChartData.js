@@ -27,29 +27,28 @@ PriceChartData.prototype._hasMaxSeriesReached = function(){
 	return this.data.length == this.maxSeries;
 };
 
-PriceChartData.prototype.getPriceBound = function(){
-	var max = 0;
-	var min = 1000000;
-	for(var i=0; i < this.data.length; i++){
-		for(var j = 0; j < this.data[i].length; j++){
-			var price = this.data[i][j][1];
-			if(price > max)
-				max = price;
-			if(price < min)
-				min = price;
-		}
-	}
-	var spreadAverage = (max - min)/(max + min);
-	return {min  : min - spreadAverage, max : max + spreadAverage};
+PriceChartData.prototype._getMaxPrice = function(price, currentMaxPrice){
+	return price > currentMaxPrice ? price : currentMaxPrice;		
+};
+
+PriceChartData.prototype._getMinPrice = function(price, currentMinPrice){
+	return price < currentMinPrice ? price : currentMinPrice;		
 };
 
 PriceChartData.prototype.getData = function(){
-	if(this._hasMaxSeriesReached()){
-		for(var i=0; i < this.data.length; i++){
-			for(var j = 0; j < this.data[i].length; j++){
+	var hasMaxSeriesSeached = this._hasMaxSeriesReached();
+	var maxPrice = 0;
+	var minPrice = 1000000;
+	for(var i=0; i < this.data.length; i++){
+		for(var j = 0; j < this.data[i].length; j++){
+			if(hasMaxSeriesSeached){
 				this.data[i][j][0] = this.data[i][j][0] - 1;
 			}
+			var price = this.data[i][j][1];
+			maxPrice = this._getMaxPrice(price, maxPrice);
+			minPrice = this._getMinPrice(price, minPrice);
 		}
-	}
-	return this.data;
+	}	
+	var spreadAverage = (maxPrice - minPrice)/(maxPrice + minPrice);
+	return {dataPoints : this.data, priceBound : {minPrice : minPrice - spreadAverage, maxPrice : maxPrice + spreadAverage}};
 };

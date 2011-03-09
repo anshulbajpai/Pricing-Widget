@@ -15,7 +15,8 @@ PriceChart.prototype.reset = function(){
 };
 
 PriceChart.prototype.drawChart = function() {
-	var priceBound = this.data.getPriceBound();
-	this.options.yaxis = {min : priceBound.min, max : priceBound.max};
-	$.plot($(this.containerId), this.data.getData(), this.options);
+	var data = this.data.getData();
+	var priceBound = data.priceBound;
+	this.options.yaxis = {min : priceBound.minPrice, max : priceBound.maxPrice};
+	$.plot($(this.containerId),data.dataPoints , this.options);
 };
