@@ -1,9 +1,9 @@
 var PricingLadderRenderer = function(){};
 
-PricingLadderRenderer.prototype.render = function(pricingData){
-	var askSteps = pricingData.askData.reverse();
-	var bidSteps = pricingData.bidData;
-	this._updatePricingLadderTitle(pricingData.title);
+PricingLadderRenderer.prototype.render = function(pricingModel){
+	var askSteps = pricingModel.askData.reverse();
+	var bidSteps = pricingModel.bidData;
+	this._updatePricingLadderTitle(pricingModel.title);
 	this._updatePricingLadder(askSteps, bidSteps);
 };
 

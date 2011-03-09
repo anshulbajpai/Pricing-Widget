@@ -1,9 +1,9 @@
-var PriceChartData = function(maxSeries){
+var PriceChartViewModel = function(maxSeries){
 	this.data = [];
 	this.maxSeries = maxSeries;	
 };
 
-PriceChartData.prototype.insert = function(seriesNumber, pointId, dataPoint){
+PriceChartViewModel.prototype.insert = function(seriesNumber, pointId, dataPoint){
 	if(this._hasMaxSeriesReached())		
 		dataPoint[0] = this.maxSeries;	
 	this._shiftSeriesIfFull(seriesNumber, pointId);
@@ -11,31 +11,31 @@ PriceChartData.prototype.insert = function(seriesNumber, pointId, dataPoint){
 	this.data[this.data.length -1].push(dataPoint);
 };
 
-PriceChartData.prototype._addSeriesIfNotPresent = function(seriesNumber){
+PriceChartViewModel.prototype._addSeriesIfNotPresent = function(seriesNumber){
 	if(this.data[seriesNumber] == null)
 		this.data.push([]);
 };
 
-PriceChartData.prototype._shiftSeriesIfFull = function(seriesNumber, pointId){
+PriceChartViewModel.prototype._shiftSeriesIfFull = function(seriesNumber, pointId){
 	if(pointId == 0 && this._hasMaxSeriesReached()){
 		this.data.shift();
 		this.data.push([]);		
 	}
 };
 
-PriceChartData.prototype._hasMaxSeriesReached = function(){
+PriceChartViewModel.prototype._hasMaxSeriesReached = function(){
 	return this.data.length == this.maxSeries;
 };
 
-PriceChartData.prototype._getMaxPrice = function(price, currentMaxPrice){
+PriceChartViewModel.prototype._getMaxPrice = function(price, currentMaxPrice){
 	return price > currentMaxPrice ? price : currentMaxPrice;		
 };
 
-PriceChartData.prototype._getMinPrice = function(price, currentMinPrice){
+PriceChartViewModel.prototype._getMinPrice = function(price, currentMinPrice){
 	return price < currentMinPrice ? price : currentMinPrice;		
 };
 
-PriceChartData.prototype.getData = function(){
+PriceChartViewModel.prototype.getData = function(){
 	var hasMaxSeriesSeached = this._hasMaxSeriesReached();
 	var maxPrice = 0;
 	var minPrice = 1000000;

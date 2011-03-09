@@ -6,7 +6,7 @@ PricingLadderWidget.prototype.reset = function(){
 	this.pricingLadderRenderer.reset();
 };
 
-PricingLadderWidget.prototype.update = function(pricingData){
-	this.pricingLadderRenderer.render(pricingData);
+PricingLadderWidget.prototype.update = function(pricingModel){
+	this.pricingLadderRenderer.render(pricingModel);
 };
 

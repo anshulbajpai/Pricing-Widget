@@ -8,8 +8,8 @@ PriceWidgets.prototype.reset = function(){
 	}
 };
 
-PriceWidgets.prototype.update = function(pricingData){
+PriceWidgets.prototype.update = function(pricingModel){
 	for(var i = 0; i < this.priceWidgets.length; i++){
-		this.priceWidgets[i].update(pricingData);
+		this.priceWidgets[i].update(pricingModel);
 	}
 };

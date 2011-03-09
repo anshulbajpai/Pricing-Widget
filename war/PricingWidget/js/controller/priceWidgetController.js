@@ -21,8 +21,8 @@ PriceWidgetController.prototype._successCallback = function(response){
 	{
 		var instrumentIdFromResponse = trimmedText.split('|')[0];
 		if(this.instrumentId == instrumentIdFromResponse){
-			var pricingData = this.pricingDataParser.createPricingDataFrom(trimmedText);
-			this.priceWidgets.update(pricingData);	
+			var pricingModel = this.pricingDataParser.createPricingModelFrom(trimmedText);
+			this.priceWidgets.update(pricingModel);	
 		}
 	}	
 };

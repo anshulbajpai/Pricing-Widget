@@ -1,5 +1,5 @@
 var PriceChart = function (containerId) {
-    this.data = new PriceChartData(this.MAX_SERIES);
+    this.data = this._createFreshPriceChartViewModel();
     this.containerId = containerId;
 	this.options = {series : { map: { pointDimension: 3, active: true, show: true}}, xaxis : {noTicks : true}};	
 };
@@ -11,7 +11,11 @@ PriceChart.prototype.setDataPoint = function(seriesNumber, pointId, dataPoint) {
 };
 	
 PriceChart.prototype.reset = function(){
-	this.data = new PriceChartData(this.MAX_SERIES);
+	this.data = this._createFreshPriceChartViewModel();
+};
+
+PriceChart.prototype._createFreshPriceChartViewModel = function(){
+	return new PriceChartViewModel(this.MAX_SERIES);
 };
 
 PriceChart.prototype.drawChart = function() {

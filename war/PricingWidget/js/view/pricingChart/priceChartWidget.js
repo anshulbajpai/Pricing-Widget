@@ -3,9 +3,9 @@ var PriceChartWidget = function (priceChart) {
 	this.priceChart = priceChart;
 };
 
-PriceChartWidget.prototype.update = function(pricingData) {
-	var askData = pricingData.askData;
-	var bidData = pricingData.bidData;	
+PriceChartWidget.prototype.update = function(pricingModel) {
+	var askData = pricingModel.askData;
+	var bidData = pricingModel.bidData;	
 	var maxBidQuantity = this._getMaxQuantity(bidData);
 	var maxAskQuantity = this._getMaxQuantity(askData);
 	for(var i =0; i < bidData.length; i++){

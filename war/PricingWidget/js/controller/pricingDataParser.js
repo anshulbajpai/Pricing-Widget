@@ -1,10 +1,10 @@
 var PricingDataParser = function(){};
 
-PricingDataParser.prototype.createPricingDataFrom = function(response){
+PricingDataParser.prototype.createPricingModelFrom = function(response){
 	var parsedResponse = this._getParsedResponseFrom(response);
 	var bidData =  this._createTradeDataFrom(parsedResponse[1]);
 	var askData = this._createTradeDataFrom(parsedResponse[2]);
-	return {title : parsedResponse[0], bidData : bidData, askData : askData};
+	return new PriceModel(parsedResponse[0], bidData, askData);
 };
 
 PricingDataParser.prototype._getParsedResponseFrom = function(response){
@@ -19,9 +19,4 @@ PricingDataParser.prototype._createTradeDataFrom = function(tradeDataResponse, i
 		tradeData.push(new PriceData(parseInt(priceData[0]),parseFloat(priceData[1])));
 	}
 	return tradeData;
-};
-
-var PriceData = function(quantity, price){
-	this.quantity = quantity;	
-	this.price = price;
 };
