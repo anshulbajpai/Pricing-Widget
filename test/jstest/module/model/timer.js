@@ -1,2 +1,0 @@
-var Timer = function(){};
-
