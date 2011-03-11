@@ -1,14 +1,17 @@
 var PriceWidgetController = function(urlTemplate, ajaxWrapper, pricingDataParser, priceWidgets){
+	var that = this;
 	this.urlTemplate = urlTemplate;
 	this.ajaxWrapper = ajaxWrapper;
 	this.pricingDataParser = pricingDataParser;
-	this.priceWidgets = priceWidgets;	
+	this.priceWidgets = priceWidgets;
+	this.priceDataContainer = new PriceDataContainer(function(pricingModel){that.priceWidgets.update(pricingModel);}, this);
 };
 
 PriceWidgetController.prototype.show = function(instrumentId){
 	this.instrumentId = instrumentId;
+	this.priceDataContainer.reset();
 	this.priceWidgets.reset();
-	this._getResponse();
+	this._getResponse();	
 };
 
 PriceWidgetController.prototype._getResponse = function(){
@@ -21,8 +24,8 @@ PriceWidgetController.prototype._successCallback = function(response){
 	{
 		var instrumentIdFromResponse = trimmedText.split('|')[0];
 		if(this.instrumentId == instrumentIdFromResponse){
-			var pricingModel = this.pricingDataParser.createPricingModelFrom(trimmedText);
-			this.priceWidgets.update(pricingModel);	
+			var currentPricingModel = this.pricingDataParser.createPricingModelFrom(trimmedText);
+			this.priceDataContainer.add(currentPricingModel);				
 		}
 	}	
 };
