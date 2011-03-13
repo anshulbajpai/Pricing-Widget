@@ -5,9 +5,9 @@ var PriceModel = function(title, bidData, askData){
 };
 
 PriceModel.prototype.getBetterBidData = function(otherBidData){
-	return this.bidData.hasBetterPriceThan(otherBidData) ? this.bidData : otherBidData || this.bidData;
+	return this.bidData.hasBetterPriceThan(otherBidData) ? this.bidData : otherBidData;
 };
 
 PriceModel.prototype.getBetterAskData = function(otherAskData){
-	return this.askData.hasBetterPriceThan(otherAskData) ? this.askData : otherAskData || this.askData;
+	return this.askData.hasBetterPriceThan(otherAskData) ? this.askData : otherAskData;
 };

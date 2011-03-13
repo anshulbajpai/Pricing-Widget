@@ -10,12 +10,20 @@ PriceDataContainer.prototype.reset = function(){
 	{
 		clearInterval(this.timerId);
 	}
-	this.bestBidData = null;
-	this.bestAskData = null;	
-	this.lastReceivedBidData = null;
-	this.lastReceivedAskData = null;
-	this.title = null;
+	this._resetData();
 	this.timerId = setInterval(function(){that._spit();}, 1000);
+};
+
+PriceDataContainer.prototype._resetData = function(){
+	this._resetBestData();	
+	this.lastReceivedBidData = this.bestBidData;
+	this.lastReceivedAskData = this.bestAskData;
+	this.title = null;
+};
+
+PriceDataContainer.prototype._resetBestData = function(){
+	this.bestBidData = new BidData();
+	this.bestAskData = new AskData();	
 };
 
 PriceDataContainer.prototype.add = function(pricingModel){
@@ -28,11 +36,9 @@ PriceDataContainer.prototype.add = function(pricingModel){
 };
 
 PriceDataContainer.prototype._spit = function(){
-	var bidData = this.bestBidData || this.lastReceivedBidData;
-	var askData = this.bestAskData || this.lastReceivedAskData;
-	this.bestBidData = null;
-	this.bestAskData = null;
-	if(bidData && askData)
-		this.callback.call(this.callerReference, new PriceModel(this.title, bidData.data, askData.data));	
+	var bidData = this.bestBidData.hasData() ? this.bestBidData : this.lastReceivedBidData;
+	var askData = this.bestAskData.hasData() ? this.bestAskData : this.lastReceivedAskData;
+	this._resetBestData();
+	this.callback.call(this.callerReference, new PriceModel(this.title, bidData.data, askData.data));	
 	verifier.addFinalUpdate(bidData, askData);
 };

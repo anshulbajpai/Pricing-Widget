@@ -6,6 +6,10 @@ AskData.prototype.add = function(data){
 	this.data.push(data);
 };
 
+AskData.prototype.hasData = function(data){
+	return this.data.length > 0;
+};
+
 AskData.prototype._getBestPrice = function(){
 	var maxPrice = 0;
 	for(var i = 0; i < this.data.length; i++){
@@ -17,5 +21,5 @@ AskData.prototype._getBestPrice = function(){
 };
 
 AskData.prototype.hasBetterPriceThan = function(otherAskData){
-	return otherAskData && this._getBestPrice() >= otherAskData._getBestPrice();
+	return this._getBestPrice() >= otherAskData._getBestPrice();
 };
