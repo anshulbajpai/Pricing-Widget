@@ -4,10 +4,10 @@ var PriceModel = function(title, bidData, askData){
 	this.askData = askData;
 };
 
-PriceModel.prototype.hasBetterBidPriceThan = function(bidData){
-	return this.bidData.hasBetterPriceThan(bidData);
+PriceModel.prototype.getBetterBidData = function(otherBidData){
+	return this.bidData.hasBetterPriceThan(otherBidData) ? this.bidData : otherBidData || this.bidData;
 };
 
-PriceModel.prototype.hasBetterAskPriceThan = function(askData){
-	return this.askData.hasBetterPriceThan(askData);
+PriceModel.prototype.getBetterAskData = function(otherAskData){
+	return this.askData.hasBetterPriceThan(otherAskData) ? this.askData : otherAskData || this.askData;
 };

@@ -17,5 +17,5 @@ AskData.prototype._getBestPrice = function(){
 };
 
 AskData.prototype.hasBetterPriceThan = function(otherAskData){
-	return this._getBestPrice() >= otherAskData._getBestPrice();
+	return otherAskData && this._getBestPrice() >= otherAskData._getBestPrice();
 };

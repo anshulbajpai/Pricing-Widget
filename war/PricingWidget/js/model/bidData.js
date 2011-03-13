@@ -17,6 +17,6 @@ BidData.prototype._getBestPrice = function(){
 };
 
 BidData.prototype.hasBetterPriceThan = function(otherBidData){
-	return this._getBestPrice() <= otherBidData._getBestPrice();
+	return otherBidData && this._getBestPrice() <= otherBidData._getBestPrice();
 };
 

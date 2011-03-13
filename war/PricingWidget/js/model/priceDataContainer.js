@@ -19,19 +19,9 @@ PriceDataContainer.prototype.reset = function(){
 };
 
 PriceDataContainer.prototype.add = function(pricingModel){
-	this.title = this.title || pricingModel.title;
-	if(this.bestBidData && pricingModel.hasBetterBidPriceThan(this.bestBidData)){
-		this.bestBidData = pricingModel.bidData;
-	}
-	else{
-		this.bestBidData = pricingModel.bidData;
-	}
-	if(this.bestAskData && pricingModel.hasBetterAskPriceThan(this.bestAskData)){
-		this.bestAskData = pricingModel.askData;
-	}
-	else{
-		this.bestAskData = pricingModel.askData;
-	}
+	this.title = pricingModel.title;
+	this.bestBidData = pricingModel.getBetterBidData(this.bestBidData);
+	this.bestAskData = pricingModel.getBetterAskData(this.bestAskData);
 	this.lastReceivedBidData = pricingModel.bidData;
 	this.lastReceivedAskData = pricingModel.askData;
 	verifier.addInterimUpdate(this.bestBidData, this.bestAskData, this.lastReceivedBidData, this.lastReceivedAskData);
