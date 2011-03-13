@@ -39,6 +39,8 @@ var priceWidgetController = new PriceWidgetController(pricingUrlTemplate, pricin
 
 var selectedInstrument = null;
 
+var verifier = null;
+
 function longPollCallback()
 {
 	if (!xhr || 4 != xhr.readyState)
@@ -88,6 +90,7 @@ function sendLongPoll()
 
 function startWidget()
 {
+	verifier = new Verifier();
 	displayDiv = document.getElementById("data");
 	xhr = createXmlHttpRequest();
 	xhr.open("GET", '../priceWidget?url=' + pollUrl + xhrCounter++ + '&init=true', true);

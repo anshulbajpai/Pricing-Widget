@@ -5,10 +5,6 @@ var PriceDataContainer = function(callback, callerReference){
 };
 
 PriceDataContainer.prototype.reset = function(){
-	this._reset();
-};
-
-PriceDataContainer.prototype._reset = function(){
 	var that = this;
 	if (-1 != this.timerId)
 	{
@@ -24,13 +20,13 @@ PriceDataContainer.prototype._reset = function(){
 
 PriceDataContainer.prototype.add = function(pricingModel){
 	this.title = this.title || pricingModel.title;
-	if(this.bestBidData && pricingModel.hasSameOrLowerBidPriceThan(this.bestBidData)){
+	if(this.bestBidData && pricingModel.hasBetterBidPriceThan(this.bestBidData)){
 		this.bestBidData = pricingModel.bidData;
 	}
 	else{
 		this.bestBidData = pricingModel.bidData;
 	}
-	if(this.bestAskData && pricingModel.hasSameOrHigherAskPriceThan(this.bestAskData)){
+	if(this.bestAskData && pricingModel.hasBetterAskPriceThan(this.bestAskData)){
 		this.bestAskData = pricingModel.askData;
 	}
 	else{
@@ -38,6 +34,7 @@ PriceDataContainer.prototype.add = function(pricingModel){
 	}
 	this.lastReceivedBidData = pricingModel.bidData;
 	this.lastReceivedAskData = pricingModel.askData;
+	verifier.addInterimUpdate(this.bestBidData, this.bestAskData, this.lastReceivedBidData, this.lastReceivedAskData);
 };
 
 PriceDataContainer.prototype._spit = function(){
@@ -47,4 +44,5 @@ PriceDataContainer.prototype._spit = function(){
 	this.bestAskData = null;
 	if(bidData && askData)
 		this.callback.call(this.callerReference, new PriceModel(this.title, bidData.data, askData.data));	
+	verifier.addFinalUpdate(bidData, askData);
 };

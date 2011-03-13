@@ -16,6 +16,8 @@
 	<script type="text/javascript" src="js/view/pricingChart/priceChartWidget.js"></script>
 	
 	<script type="text/javascript" src="js/model/priceData.js"></script>
+	<script type="text/javascript" src="js/model/bidData.js"></script>
+	<script type="text/javascript" src="js/model/askData.js"></script>
 	<script type="text/javascript" src="js/model/priceDataContainer.js"></script>
 	<script type="text/javascript" src="js/model/priceModel.js"></script>
 
@@ -26,7 +28,9 @@
 	<script type="text/javascript" src="js/common/ajaxWrapper.js"></script>
 	<script type="text/javascript" src="js/common/url.js"></script>
 	
+	<script type="text/javascript" src="js/verifier.js"></script>
 	<script type="text/javascript" src="js/lmax.js"></script>
+	
 	<link href="css/lmax.css" rel="stylesheet" type="text/css"></link>
     <title>Price Widget</title> 
 </head> 
@@ -38,11 +42,38 @@
 			<div id="pricingLadder" class="pricingLadder"><table></table></div> 
 		</div>
 		<div id="price-chart" class="price-chart" style="width:250px;height:300px;">		
+	</div>	
+	<div style="float: right; height : 250px; overflow: auto;">
+		<input id="verifierEnabler" type="checkbox">Check/Uncheck to start/stop logging</input>
+		<table id="verifier" style="border: 1px; border-style: solid">
+			<tr>
+				<th>
+					Lowest Bid Data
+				</th>
+				<th>
+					Highest Ask Data
+				</th>
+				<th>
+					Last Receieved Bid Data
+				</th>
+				<th>
+					Last Receieved Ask Data
+				</th>
+				<th>
+					Best Bid Data
+				</th>
+				<th>
+					Best Ask Data
+				</th>				
+			</tr>
+		</table>		
 	</div>
 </body> 
-</html> 
-
+</html>
 <script type="text/javascript">
+	$('#verifierEnabler').click(function() {
+		verifier.toggleLogging();
+	});
     $(document).ready(function() {
         startWidget();
     })

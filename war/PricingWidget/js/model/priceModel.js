@@ -4,9 +4,10 @@ var PriceModel = function(title, bidData, askData){
 	this.askData = askData;
 };
 
-PriceModel.prototype.hasSameOrLowerBidPriceThan = function(bidData){
-	return this.bidData.getLowestBidPrice() <= bidData.getLowestBidPrice();
+PriceModel.prototype.hasBetterBidPriceThan = function(bidData){
+	return this.bidData.hasBetterPriceThan(bidData);
 };
-PriceModel.prototype.hasSameOrHigherAskPriceThan = function(askData){
-	return this.askData.getHighestAskPrice() >= askData.getHighestAskPrice();
+
+PriceModel.prototype.hasBetterAskPriceThan = function(askData){
+	return this.askData.hasBetterPriceThan(askData);
 };
