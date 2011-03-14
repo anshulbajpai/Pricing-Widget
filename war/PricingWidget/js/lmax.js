@@ -202,7 +202,7 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 	rowTag.appendChild(tableCell);
 	var rowImg = document.createElement("img");
 	rowImg.setAttribute("class", "status_img");
-	rowImg.src = baseUrl + instrument.status + ".png";
+	//rowImg.src = baseUrl + instrument.status + ".png";
 	tableCell.appendChild(rowImg);
 	var instrumentIdentifierSpan = tableCell.appendChild(document.createElement('span'));
 	instrumentIdentifierSpan.className = 'hidden';
@@ -233,7 +233,7 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 	rowTag.appendChild(tableCell);
 	tableCell.appendChild(document.createTextNode(instrument.spread));
 	var spreadClasses = "spread_column";
-	if (-1 != instrument.spread.indexOf("-"))
+	if (instrument.spread && -1 != instrument.spread.indexOf("-"))
 	{
 		var spreadValue = parseFloat(instrument.spread);
 		if (spreadValue <= 0.0)

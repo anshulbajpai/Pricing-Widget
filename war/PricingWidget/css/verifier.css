@@ -1,0 +1,31 @@
+.btn
+{
+background-color: #ccc;
+border:1px solid black;
+margin:3px 0px;
+color:#0066ff;
+}
+
+.dataTable{	
+	border: 1px solid #8f8882;	
+}
+.dataTable td
+{
+	height: 27px;
+	text-align: center;
+	padding: 0 10px;
+	vertical-align: middle;
+	background-color: #ccc;
+	border: 1px solid #8f8882; 
+		
+}
+.dataTable th
+{
+	height: 27px;
+	text-align: center;
+	background-color: #6c635e;
+	color: #FFF;
+	vertical-align: middle;
+	white-space: nowrap;
+	border-right: 1px solid #fff;
+}
