@@ -17,9 +17,8 @@ String.prototype.trim = function()
 	return this.replace(/^\s/, "").replace(/\s*$/, "");
 };
 
-var tableHeaderTitles = ["Instrument", "Qty", "Sell price", "Buy price", "Qty", "Spread"];
-var currentInstruments;
-var flashTimerId = -1;
+var tableHeaderTitles = ["Instrument", "Spread"];
+
 var sendCallbackTimerId = -1;
 var displayDiv;
 var xhr;
@@ -30,7 +29,7 @@ var pollUrl = baseUrl + "longPoll/";
 var pricingLadderWidget = new PricingLadderWidget(new PricingLadderRenderer());
 var priceChartWidget = new PriceChartWidget(new PriceChart("#price-chart"));
 
-var pricingUrlTemplate = new Url(pollUrl + '?orderBookId={0}&init=true');
+var pricingUrlTemplate = new Url(pollUrl + '?init=true');
 var pricingAjaxWrapper = new AjaxWrapper();
 var pricingDataParser = new PricingDataParser();
 var priceWidgets =  new PriceWidgets([pricingLadderWidget, priceChartWidget]);
@@ -101,28 +100,9 @@ function startWidget()
 
 function processResponseData(responseData)
 {
-	if (-1 != flashTimerId)
-	{
-		clearTimeout(flashTimerId);
-	}
-	
 	var instruments = parseInstruments(responseData);
-	var resetFragment = createTableFragment(instruments);
-
-	if (!currentInstruments)
-	{
-		currentInstruments = instruments;       
-	}
-	determinePriceMovements(instruments);
-
-	var flashFragment = createTableFragment(instruments);
-	displayDiv.replaceChild(flashFragment, displayDiv.firstChild);
-	currentInstruments = instruments;
-
-	flashTimerId = setTimeout(function()
-	{
-		displayDiv.replaceChild(resetFragment, displayDiv.firstChild);
-	}, 200);
+	var fragment = createTableFragment(instruments);
+	displayDiv.replaceChild(fragment, displayDiv.firstChild);
 }
 
 function addHeadersToTable(tableTag, headers)
@@ -144,48 +124,31 @@ function createTableFragment(instruments)
 	var fragment = document.createDocumentFragment();
 	var tableTag = document.createElement("table");
 	fragment.appendChild(tableTag);
-
 	addHeadersToTable(tableTag, tableHeaderTitles);
-
 	for (var i = 0, size = instruments.length; i < size; i++)
 	{
 		addInstrumentToTable(tableTag, instruments[i], i);
 	}
-
 	return fragment;
 }
 
 function Instrument(data)
 {
 	var dataItems = data.split("|");
-
 	this.orderBookId = dataItems[0];
 	this.status = dataItems[1];
 	this.commonName = dataItems[2];
-
-	var sellDetails = dataItems[3].split("@");
-	this.sellQty = sellDetails[0];
-	this.sellPrice = sellDetails[1];
-	this.sellPriceChange = false;
-
-	var buyDetails = dataItems[4].split("@");
-	this.buyQty = buyDetails[0];
-	this.buyPrice = buyDetails[1];
-	this.buyPriceChange = false;
-
 	this.spread = dataItems[5];
 }
 
 function parseInstruments(responseData)
 {
 	var instruments = new Array();
-
 	var dataLines = responseData.split("\n");
 	for (var i = 0, size = dataLines.length; i < size; i++)
 	{
 		instruments[i] = new Instrument(dataLines[i]);
 	}
-
 	return instruments;
 }
 
@@ -202,7 +165,7 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 	rowTag.appendChild(tableCell);
 	var rowImg = document.createElement("img");
 	rowImg.setAttribute("class", "status_img");
-	//rowImg.src = baseUrl + instrument.status + ".png";
+	rowImg.src = baseUrl + instrument.status + ".png";
 	tableCell.appendChild(rowImg);
 	var instrumentIdentifierSpan = tableCell.appendChild(document.createElement('span'));
 	instrumentIdentifierSpan.className = 'hidden';
@@ -211,24 +174,6 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 	$(tableCell).hover(mouseEnterOnInstrument, mouseLeaveOnInstrument);
 	$(tableCell).click(handleClickForInstrument);	
 	
-	tableCell = document.createElement("td");
-	rowTag.appendChild(tableCell);
-	tableCell.appendChild(document.createTextNode(instrument.sellQty));
-
-	tableCell = document.createElement("td");
-	tableCell.setAttribute("class", instrument.sellPriceChange ? "sell_move" : "sell_column");
-	rowTag.appendChild(tableCell);
-	tableCell.appendChild(document.createTextNode(instrument.sellPrice));
-
-	tableCell = document.createElement("td");
-	tableCell.setAttribute("class", instrument.buyPriceChange ? "buy_move" : "buy_column");
-	rowTag.appendChild(tableCell);
-	tableCell.appendChild(document.createTextNode(instrument.buyPrice));
-
-	tableCell = document.createElement("td");
-	rowTag.appendChild(tableCell);
-	tableCell.appendChild(document.createTextNode(instrument.buyQty));
-
 	tableCell = document.createElement("td");
 	rowTag.appendChild(tableCell);
 	tableCell.appendChild(document.createTextNode(instrument.spread));
@@ -267,23 +212,4 @@ function getInstrumentHoverClass(){
 
 function getInstrumentClickClass(){
 	return 'selected_instrument';
-}
-
-function determinePriceMovements(instruments)
-{
-	for (var i = 0, size = instruments.length; i < size; i++)
-	{
-		var currentInstrumentView = currentInstruments[i];
-		var newInstrumentView = instruments[i];
-
-		if (newInstrumentView.sellPrice != currentInstrumentView.sellPrice)
-		{
-			newInstrumentView.sellPriceChange = true;
-		}
-
-		if (newInstrumentView.buyPrice != currentInstrumentView.buyPrice)
-		{
-			newInstrumentView.buyPriceChange = true;
-		}
-	}
 }
