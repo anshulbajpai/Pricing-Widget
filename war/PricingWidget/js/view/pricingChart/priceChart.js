@@ -4,7 +4,7 @@ var PriceChart = function (containerId) {
 	this.options = {series : { map: { pointDimension: 3, active: true, show: true}}, xaxis : {noTicks : true}};	
 };
 
-PriceChart.prototype.MAX_SERIES = 105;
+PriceChart.prototype.MAX_SERIES = 112;
 
 PriceChart.prototype.setDataPoint = function(seriesNumber, pointId, dataPoint) {
 	this.data.insert(seriesNumber, pointId, dataPoint);
