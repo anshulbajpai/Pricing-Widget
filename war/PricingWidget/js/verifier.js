@@ -22,10 +22,10 @@ Verifier.prototype.addFinalUpdate = function(bidData, askData){
 Verifier.prototype._createInterimRow = function(lowestBidData, highestAskData, lastReceivedBidData, lastReceivedAskData){	
 	var row = this.tableBody.appendChild(document.createElement('tr'));
 	row.height = '10px';
-	row.appendChild(this._createCellWith(lowestBidData._getBestPrice()));
-	row.appendChild(this._createCellWith(highestAskData._getBestPrice()));
-	row.appendChild(this._createCellWith(lastReceivedBidData._getBestPrice()));
-	row.appendChild(this._createCellWith(lastReceivedAskData._getBestPrice()));
+	row.appendChild(this._createCellWith(lowestBidData._getBestPriceData().price));
+	row.appendChild(this._createCellWith(highestAskData._getBestPriceData().price));
+	row.appendChild(this._createCellWith(lastReceivedBidData._getBestPriceData().price));
+	row.appendChild(this._createCellWith(lastReceivedAskData._getBestPriceData().price));
 	row.appendChild(this._createCellWith(''));
 	row.appendChild(this._createCellWith(''));
 };
@@ -37,8 +37,8 @@ Verifier.prototype._createFinalRow = function(bidData, askData){
 	row.appendChild(this._createCellWith(''));
 	row.appendChild(this._createCellWith(''));
 	row.appendChild(this._createCellWith(''));
-	row.appendChild(this._createCellWith(bidData._getBestPrice()));
-	row.appendChild(this._createCellWith(askData._getBestPrice()));	
+	row.appendChild(this._createCellWith(bidData._getBestPriceData().price));
+	row.appendChild(this._createCellWith(askData._getBestPriceData().price));	
 };
 
 Verifier.prototype._createCellWith = function(data){
