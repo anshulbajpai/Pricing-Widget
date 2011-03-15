@@ -138,7 +138,26 @@ function Instrument(data)
 	this.orderBookId = dataItems[0];
 	this.status = dataItems[1];
 	this.commonName = dataItems[2];
-	this.spread = dataItems[5];
+	if(this.status == "Closed")
+		this.spread = "NA";
+	else{
+		var spread = calculateSpread(parseTradeData(dataItems[3]), parseTradeData(dataItems[4]));
+		this.spread = Math.round(spread*Math.pow(10,5))/Math.pow(10,5);
+	}
+}
+
+function calculateSpread(bidData, askData){
+	
+	return calculatePrice(askData[askData.length-1]) - calculatePrice(bidData[0]);
+}
+
+function parseTradeData(data){
+	return data.split(';');
+}
+
+function calculatePrice(data){	
+	return parseFloat(data.split('@')[1]);
+	
 }
 
 function parseInstruments(responseData)
@@ -177,14 +196,10 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 	tableCell = document.createElement("td");
 	rowTag.appendChild(tableCell);
 	tableCell.appendChild(document.createTextNode(instrument.spread));
-	var spreadClasses = "spread_column";
-	if (instrument.spread && -1 != instrument.spread.indexOf("-"))
+	var spreadClasses = "spread_column";	
+	if (instrument.spread <= 0.0)
 	{
-		var spreadValue = parseFloat(instrument.spread);
-		if (spreadValue <= 0.0)
-		{
-			spreadClasses += " choice_market";
-		}
+		spreadClasses += " choice_market";
 	}
 	tableCell.setAttribute("class", spreadClasses);
 }

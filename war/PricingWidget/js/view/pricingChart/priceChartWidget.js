@@ -44,5 +44,3 @@ PriceChartWidget.prototype._updateGraphData = function(pricePoint, maxQuantity, 
 PriceChartWidget.prototype._getColorFactorFor = function(quantity, maxQuantity){
 	return ((quantity/maxQuantity)*0.8) + 0.2;
 };
-
-
