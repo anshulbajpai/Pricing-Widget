@@ -6,20 +6,14 @@ AskData.prototype.add = function(data){
 	this.data.push(data);
 };
 
-AskData.prototype.hasData = function(data){
+AskData.prototype.hasData = function(){
 	return this.data.length > 0;
 };
 
-AskData.prototype._getBestPrice = function(){
-	var maxPrice = 0;
-	for(var i = 0; i < this.data.length; i++){
-		var currentData = this.data[i];
-		if(currentData.hasHigherPriceThan(maxPrice))
-			maxPrice = currentData.price;
-	}
-	return maxPrice;
+AskData.prototype._getBestPriceData = function(){
+	return this.hasData() ? this.data[this.data.length - 1] : new PriceData(0, 0);
 };
 
 AskData.prototype.hasBetterPriceThan = function(otherAskData){
-	return this._getBestPrice() >= otherAskData._getBestPrice();
+	return this._getBestPriceData().hasHigherPriceThan(otherAskData._getBestPriceData());
 };

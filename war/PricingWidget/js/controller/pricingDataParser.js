@@ -12,7 +12,7 @@ PricingDataParser.prototype._getParsedResponseFrom = function(response){
 };
 
 PricingDataParser.prototype._createTradeDataFrom = function(tradeDataResponse, isBidStep){
-	var splittedTradeDataResponse = tradeDataResponse.split(';');
+	var splittedTradeDataResponse = isBidStep ? tradeDataResponse.split(';') : tradeDataResponse.split(';').reverse();
 	var tradeData = isBidStep ? new BidData() : new AskData();
 	for(var i = 0; i < splittedTradeDataResponse.length ; i++){	
 		var priceData = splittedTradeDataResponse[i].split('@');

@@ -36,18 +36,18 @@ PriceChartViewModel.prototype._getMinPrice = function(price, currentMinPrice){
 };
 
 PriceChartViewModel.prototype.getData = function(){
-	var hasMaxSeriesSeached = this._hasMaxSeriesReached();
 	var maxPrice = 0;
-	var minPrice = 1000000;
+	var minPrice = Number.MAX_VALUE;
 	for(var i=0; i < this.data.length; i++){
 		for(var j = 0; j < this.data[i].length; j++){
-			if(hasMaxSeriesSeached){
+			if(this._hasMaxSeriesReached()){
 				this.data[i][j][0] = this.data[i][j][0] - 1;
 			}
-			var price = this.data[i][j][1];
-			maxPrice = this._getMaxPrice(price, maxPrice);
-			minPrice = this._getMinPrice(price, minPrice);
 		}
+		var maxPriceForSeries = this.data[i][0][1];
+		var minPriceForSeries = this.data[i][this.data[i].length-1][1];
+		maxPrice = this._getMaxPrice(maxPriceForSeries, maxPrice);
+		minPrice = this._getMinPrice(minPriceForSeries, minPrice);
 	}	
 	var spreadAverage = (maxPrice - minPrice)/(maxPrice + minPrice);
 	return {dataPoints : this.data, priceBound : {minPrice : minPrice - spreadAverage, maxPrice : maxPrice + spreadAverage}};

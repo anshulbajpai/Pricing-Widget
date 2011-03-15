@@ -1,7 +1,11 @@
-var PricingLadderRenderer = function(){};
+var PricingLadderRenderer = function(){
+	this.timerId = -1;
+	this.currentBidData = new BidData();
+	this.currentAskData = new AskData();
+};
 
 PricingLadderRenderer.prototype.render = function(pricingModel){
-	var askSteps = pricingModel.askData.reverse();
+	var askSteps = pricingModel.askData;
 	var bidSteps = pricingModel.bidData;
 	this._getPricingLadder().show();
 	this._updatePricingLadderTitle(pricingModel.title);
@@ -9,8 +13,29 @@ PricingLadderRenderer.prototype.render = function(pricingModel){
 };
 
 PricingLadderRenderer.prototype._updatePricingLadder = function(askSteps, bidSteps){
+	this._clearTimeIfRunning();	
+		
 	var pricingLadder = this._getPricingLadder()[0];
-	pricingLadder.replaceChild(this._createTableFragement(askSteps, bidSteps), pricingLadder.firstChild);
+//	var resetFragment = this._createTableFragement(askSteps, bidSteps);
+//	
+//	askSteps.determinePriceChange(this.currentAskData);
+//	bidSteps.determinePriceChange(this.currentBidData);
+//	
+//	this.currentBidData = bidSteps;
+//	this.currentAskData = askSteps;
+	
+	var flashFragment = this._createTableFragement(askSteps, bidSteps);
+	pricingLadder.replaceChild(flashFragment, pricingLadder.firstChild);
+//	this.timerId = setTimeout(function(){
+//		pricingLadder.replaceChild(resetFragment, pricingLadder.firstChild);
+//	},100);	
+};
+
+PricingLadderRenderer.prototype._clearTimeIfRunning = function(){
+	if (-1 != this.timerId)
+	{
+		clearTimeout(this.timerId);
+	}
 };
 
 PricingLadderRenderer.prototype._updatePricingLadderTitle = function(title){
@@ -86,6 +111,7 @@ PricingLadderRenderer.prototype._createStepCellFrom = function(value, className)
 PricingLadderRenderer.prototype.reset = function(){
 	this._getPricingLadder().hide();
 	this._getPricingLadderTitle().hide();
+	this.timerId = -1;
 };
 
 PricingLadderRenderer.prototype._getPricingLadder = function(){

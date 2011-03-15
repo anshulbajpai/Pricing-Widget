@@ -10,12 +10,14 @@ PriceChartWidget.prototype.update = function(pricingModel) {
 	var bidMaxValue = this._getMaxValueFor(bidData);
 	var askMaxValue = this._getMaxValueFor(askData);
 	
-	for(var i =0; i < bidData.length; i++){
-		this._updateGraphData(bidData[i], bidMaxValue, i, false);
+	for(var i = 0; i < askData.length; i++){
+		this._updateGraphData(askData[i], askMaxValue, i, true);
 	}
-	for(var j = 0; j < askData.length; j++){
-		this._updateGraphData(askData[j], askMaxValue, i+j, true);
+	
+	for(var j =0; j < bidData.length; j++){
+		this._updateGraphData(bidData[j], bidMaxValue, i+j, false);
 	}
+	
 	this.priceChart.drawChart();
 	this.count++;
 };
