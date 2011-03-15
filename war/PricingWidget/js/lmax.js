@@ -207,18 +207,24 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 
 function mouseEnterOnInstrument(){
 	$(this).addClass(getInstrumentHoverClass());
+	$(this).next().addClass(getInstrumentHoverClass());
 }
 
 function mouseLeaveOnInstrument(){
 	$(this).removeClass(getInstrumentHoverClass());
+	$(this).next().removeClass(getInstrumentHoverClass());
 }
 
 function handleClickForInstrument(){
-	if(selectedInstrument)
+	if(selectedInstrument){
 		$(selectedInstrument).removeClass(getInstrumentClickClass());
+		$(selectedInstrument).next().removeClass(getInstrumentClickClass());
+	}
 	selectedInstrument = this;
 	$(selectedInstrument).removeClass(getInstrumentHoverClass());
-	$(selectedInstrument).addClass(getInstrumentClickClass());	
+	$(selectedInstrument).next().removeClass(getInstrumentHoverClass());
+	$(selectedInstrument).addClass(getInstrumentClickClass());
+	$(selectedInstrument).next().addClass(getInstrumentClickClass());
 	if(this.status == "Closed"){
 		priceWidgetController.reset();
 	}

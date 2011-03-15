@@ -8,6 +8,7 @@ body
 {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 11px;
+	margin:10px 5px 5px 5px;
 }
 
 .data, .ladder{
@@ -16,14 +17,15 @@ body
 
 .data{
 	float: left;
-	border-right: solid 1px #000;
+	border: solid 0px #000;
 	clear:none;
+	padding-right:20px;
 }
 
 .ladder{
 	float: left;
 	margin-left : 5px;
-	border-left: solid 1px #000;
+	border: solid 0px #000;
 	clear:none;
 }
 
@@ -32,36 +34,53 @@ body
 	clear:none;
 	width : 375px;
 	height : 300px;
+	margin-top:-4px;
+	padding-right:20px;
 }
 
 .data table
 {
-	width: 200px;
+	width: 250px;
 	border-collapse: collapse;
 }
 
 .instrument_column_hover {
-	background-color: grey;
+	background-color: #ccc;
 }
 
 .selected_instrument{
-	background-color: brown;
+	background-color: black;
+	color:#fff;
+}
+.instrumentTitle
+{	
+
+	background-color: #ccc;
+    color: #6B635D;
+    font-family: "Arial",sans-serif;
+    font-size: 13px;   
+    margin: 0px 0px 1px 0px;
+    padding:3px 5px;
+    text-align: left;
+    vertical-align: bottom;
+	width:240px;
 }
 
 td
 {
-	height: 27px;
+	height: 24px;
 	text-align: center;
 	padding: 0 10px;
 	vertical-align: middle;
 	border-right: 1px solid #8f8882;
+	white-space:nowrap;
 }
 
 .table_header
 {
-	height: 27px;
+	height: 24px;
 	text-align: center;
-	background-color: #6c635e;
+	background-color: #6B635D;;
 	color: #FFF;
 	vertical-align: middle;
 	white-space: nowrap;
@@ -90,16 +109,20 @@ td
 .instrument_column
 {
 	text-align: left;
+	cursor:pointer;	
 }
 
 .sell_column
 {
-	color: #cc0000;
+	color: #000;
+	font-weight:bold;
+	border-right:0px solid #000;
 }
 
 .buy_column
 {
-	color: #0066FF;
+	color: #000;
+	font-weight:bold;	
 }
 
 .spread_column
@@ -132,11 +155,22 @@ td
 }
 
 .pricingLadderTitle{
-	border-right: 1px solid #8f8882;
-	text-align: center;
+	border: 0px solid #8f8882;	
+	background-color: black;
+    color: #FFE100;
+    font-family: "Arial",sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 0px 0px 1px 0px;
+    padding:3px 5px;      
 }
 
 .pricingLadder table{
-	width : 220px;
+	border: 0px solid #000;
+	width : 280px;
 	border-collapse: collapse;
+}
+.pricingLadder
+{
+	border: 0px solid #000;	
 }

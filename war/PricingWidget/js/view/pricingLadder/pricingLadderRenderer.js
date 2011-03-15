@@ -14,7 +14,9 @@ PricingLadderRenderer.prototype._updatePricingLadder = function(askSteps, bidSte
 };
 
 PricingLadderRenderer.prototype._updatePricingLadderTitle = function(title){
-	this._getPricingLadderTitle().innerHTML = title;
+	var ladderTitle = this._getPricingLadderTitle();
+	ladderTitle.text(title);
+	ladderTitle.show();	
 };
 
 PricingLadderRenderer.prototype._getPricingLadderTitle = function(){
@@ -62,14 +64,14 @@ PricingLadderRenderer.prototype._createStepsFrom = function(steps, isAskSteps, p
 PricingLadderRenderer.prototype._createStepRowFrom = function(step, isAskStep){
 	var stepRow = document.createElement('tr');
 	if(isAskStep){
-		stepRow.appendChild(this._createEmptyStepCell());
+		stepRow.appendChild(this._createStepCellFrom('','buy_column'));
 		stepRow.appendChild(this._createStepCellFrom(step.price));
 		stepRow.appendChild(this._createStepCellFrom(step.quantity, 'sell_column'));
 	}
 	else{
 		stepRow.appendChild(this._createStepCellFrom(step.quantity, 'buy_column'));
 		stepRow.appendChild(this._createStepCellFrom(step.price));
-		stepRow.appendChild(this._createEmptyStepCell());
+		stepRow.appendChild(this._createStepCellFrom('', 'sell_column'));
 	}
 	return stepRow;
 };
@@ -79,10 +81,6 @@ PricingLadderRenderer.prototype._createStepCellFrom = function(value, className)
 	stepCell.className = className;
 	stepCell.appendChild(document.createTextNode(value));
 	return stepCell;
-};
-
-PricingLadderRenderer.prototype._createEmptyStepCell = function(){
-	return document.createElement('td');
 };
 
 PricingLadderRenderer.prototype.reset = function(){
