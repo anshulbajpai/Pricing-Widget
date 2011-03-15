@@ -151,7 +151,7 @@ function roundToFiveDecimalPlace(value){
 }
 
 function calculateSpread(bidData, askData){	
-	return calculatePrice(askData[askData.length-1]) - calculatePrice(bidData[0]);
+	return calculatePrice(askData[0]) - calculatePrice(bidData[0]);
 }
 
 function parseTradeData(data){
