@@ -103,6 +103,8 @@ function processResponseData(responseData)
 	var instruments = parseInstruments(responseData);
 	var fragment = createTableFragment(instruments);
 	displayDiv.replaceChild(fragment, displayDiv.firstChild);
+	if(!selectedInstrument)
+		$('tr span[id="EUR/USD"]').parent().parent().trigger('click');
 }
 
 function addHeadersToTable(tableTag, headers)
@@ -197,7 +199,10 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 	rowImg.setAttribute("class", "status_img");
 	rowImg.src = baseUrl + instrument.status + ".png";
 	instrumentNameCell.appendChild(rowImg);
-	instrumentNameCell.appendChild(document.createTextNode(instrument.commonName));
+	
+	var instrumentName = instrumentNameCell.appendChild(document.createElement('span'));
+	instrumentName.id = instrument.commonName;
+	instrumentName.innerHTML = instrument.commonName;;
 	
 	var spreadCell = document.createElement("td");
 	rowTag.appendChild(spreadCell);
@@ -208,13 +213,10 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 		spreadClasses += " choice_market";
 	}
 	spreadCell.setAttribute("class", spreadClasses);
-	
-	
 }
 
 function mouseEnterOnInstrument(){
-	$(this).addClass(getInstrumentHoverClass());
-	
+	$(this).addClass(getInstrumentHoverClass());	
 }
 
 function mouseLeaveOnInstrument(){
