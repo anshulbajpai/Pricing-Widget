@@ -214,15 +214,15 @@ function mouseLeaveOnInstrument(){
 }
 
 function handleClickForInstrument(){
+	if(selectedInstrument)
+		$(selectedInstrument).removeClass(getInstrumentClickClass());
+	selectedInstrument = this;
+	$(selectedInstrument).removeClass(getInstrumentHoverClass());
+	$(selectedInstrument).addClass(getInstrumentClickClass());	
 	if(this.status == "Closed"){
-		alert('Cannot show data as this instrument is closed.');
+		priceWidgetController.reset();
 	}
 	else{
-		if(selectedInstrument)
-			$(selectedInstrument).removeClass(getInstrumentClickClass());
-		selectedInstrument = this;
-		$(selectedInstrument).removeClass(getInstrumentHoverClass());
-		$(selectedInstrument).addClass(getInstrumentClickClass());	
 		priceWidgetController.show(selectedInstrument.instrumentId);
 	}
 }

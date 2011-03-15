@@ -14,9 +14,16 @@ PriceWidgetController.prototype._updateWidgets = function(pricingModel){
 PriceWidgetController.prototype.show = function(instrumentId){
 	this.instrumentId = instrumentId;
 	this.priceDataContainer.reset();
+	this.priceDataContainer.init();
 	this.priceWidgets.reset();
 	this._getResponse();	
 };
+
+PriceWidgetController.prototype.reset = function() {
+	this.ajaxWrapper.stopContinousRequest();
+	this.priceDataContainer.reset();
+	this.priceWidgets.reset();
+}
 
 PriceWidgetController.prototype._getResponse = function(){
 	this.ajaxWrapper.sendContinousRequest(this.urlTemplate.randomize().value(), this._successCallback, this);
@@ -33,7 +40,6 @@ PriceWidgetController.prototype._successCallback = function(response){
 
 	}	
 };
-
 
 PriceWidgetController.prototype._getInstrumentResponse = function(response){	
 	var allInstruments = response.split('\n');

@@ -1,7 +1,7 @@
 var PriceDataContainer = function(callback, callerReference){
 	this.timerId = -1;
 	this.callerReference = callerReference;
-	this.callback = callback;	
+	this.callback = callback;
 };
 
 PriceDataContainer.prototype.reset = function(){
@@ -10,7 +10,11 @@ PriceDataContainer.prototype.reset = function(){
 	{
 		clearInterval(this.timerId);
 	}
-	this._resetData();
+	this._resetData();	
+};
+
+PriceDataContainer.prototype.init = function(){
+	var that = this;	
 	this.timerId = setInterval(function(){that._spit();}, 1000);
 };
 

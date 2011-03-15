@@ -12,6 +12,7 @@ PriceChart.prototype.setDataPoint = function(seriesNumber, pointId, dataPoint) {
 	
 PriceChart.prototype.reset = function(){
 	this.data = this._createFreshPriceChartViewModel();
+	$(this.containerId).text('');
 };
 
 PriceChart.prototype._createFreshPriceChartViewModel = function(){

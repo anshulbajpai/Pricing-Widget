@@ -3,12 +3,13 @@ var PricingLadderRenderer = function(){};
 PricingLadderRenderer.prototype.render = function(pricingModel){
 	var askSteps = pricingModel.askData.reverse();
 	var bidSteps = pricingModel.bidData;
+	this._getPricingLadder().show();
 	this._updatePricingLadderTitle(pricingModel.title);
 	this._updatePricingLadder(askSteps, bidSteps);
 };
 
 PricingLadderRenderer.prototype._updatePricingLadder = function(askSteps, bidSteps){
-	var pricingLadder = this._getPricingLadder();
+	var pricingLadder = this._getPricingLadder()[0];
 	pricingLadder.replaceChild(this._createTableFragement(askSteps, bidSteps), pricingLadder.firstChild);
 };
 
@@ -17,7 +18,7 @@ PricingLadderRenderer.prototype._updatePricingLadderTitle = function(title){
 };
 
 PricingLadderRenderer.prototype._getPricingLadderTitle = function(){
-	return document.getElementById('pricingLadderTitle');
+	return $('.pricingLadderTitle');
 };
 
 PricingLadderRenderer.prototype._createTableFragement = function(askSteps, bidSteps){
@@ -85,9 +86,10 @@ PricingLadderRenderer.prototype._createEmptyStepCell = function(){
 };
 
 PricingLadderRenderer.prototype.reset = function(){
-
+	this._getPricingLadder().hide();
+	this._getPricingLadderTitle().hide();
 };
 
 PricingLadderRenderer.prototype._getPricingLadder = function(){
-	return document.getElementById('pricingLadder');
+	return $('.pricingLadder');
 };
