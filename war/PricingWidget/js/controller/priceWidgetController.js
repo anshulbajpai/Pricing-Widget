@@ -27,8 +27,10 @@ PriceWidgetController.prototype._successCallback = function(response){
 	if (trimmedText.length > 0)
 	{
 		var instrumentResponse =  this._getInstrumentResponse(trimmedText);
-		var PricingModel = this.pricingDataParser.createPricingModelFrom(instrumentResponse);
-		this.priceDataContainer.add(PricingModel);		
+
+		var pricingModel = this.pricingDataParser.createPricingModelFrom(instrumentResponse);
+		this.priceDataContainer.add(pricingModel);		
+
 	}	
 };
 

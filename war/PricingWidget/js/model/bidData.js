@@ -11,7 +11,7 @@ BidData.prototype.hasData = function(data){
 };
 
 BidData.prototype._getBestPrice = function(){
-	var minPrice = 1000000;
+	var minPrice = Number.MAX_VALUE;
 	for(var i = 0; i < this.data.length; i++){
 		var currentData = this.data[i];
 		if(currentData.hasLowerPriceThan(minPrice))
