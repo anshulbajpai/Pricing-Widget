@@ -181,16 +181,15 @@ function addInstrumentToTable(tableTag, instrument, rowIndex)
 
 	var tableCell = document.createElement("td");
 	tableCell.setAttribute("class", "instrument_column");
-	if(selectedInstrument && instrument.orderBookId == selectedInstrument.childNodes[1].innerHTML)
+	if(selectedInstrument && instrument.orderBookId == selectedInstrument.instrumentId)
 		tableCell.className += " selected_instrument";
 	rowTag.appendChild(tableCell);
 	var rowImg = document.createElement("img");
 	rowImg.setAttribute("class", "status_img");
 	rowImg.src = baseUrl + instrument.status + ".png";
 	tableCell.appendChild(rowImg);
-	var instrumentIdentifierSpan = tableCell.appendChild(document.createElement('span'));
-	instrumentIdentifierSpan.className = 'hidden';
-	instrumentIdentifierSpan.innerHTML = instrument.orderBookId;
+	tableCell.instrumentId = instrument.orderBookId;
+	tableCell.status = instrument.status;
 	tableCell.appendChild(document.createTextNode(instrument.commonName));
 	$(tableCell).hover(mouseEnterOnInstrument, mouseLeaveOnInstrument);
 	$(tableCell).click(handleClickForInstrument);	
@@ -215,12 +214,17 @@ function mouseLeaveOnInstrument(){
 }
 
 function handleClickForInstrument(){
-	if(selectedInstrument)
-		$(selectedInstrument).removeClass(getInstrumentClickClass());
-	selectedInstrument = this;
-	$(selectedInstrument).removeClass(getInstrumentHoverClass());
-	$(selectedInstrument).addClass(getInstrumentClickClass());	
-	priceWidgetController.show(selectedInstrument.childNodes[1].innerHTML);
+	if(this.status == "Closed"){
+		alert('Cannot show data as this instrument is closed.');
+	}
+	else{
+		if(selectedInstrument)
+			$(selectedInstrument).removeClass(getInstrumentClickClass());
+		selectedInstrument = this;
+		$(selectedInstrument).removeClass(getInstrumentHoverClass());
+		$(selectedInstrument).addClass(getInstrumentClickClass());	
+		priceWidgetController.show(selectedInstrument.instrumentId);
+	}
 }
 
 function getInstrumentHoverClass(){
