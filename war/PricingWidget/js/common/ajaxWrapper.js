@@ -3,15 +3,15 @@ var AjaxWrapper = function(){
 	this.canFireRequest = false;
 };
 
-AjaxWrapper.prototype.sendContinousRequest = function(url, successCallBack, callerReference){
+AjaxWrapper.prototype.sendContinousRequest = function(urlTemplate, successCallBack, callerReference){
 	this.canFireRequest = true;
-	this._sendContinousRequest(url, successCallBack, callerReference);
+	this._sendContinousRequest(urlTemplate, successCallBack, callerReference);
 };
 
-AjaxWrapper.prototype._sendContinousRequest = function(url, successCallBack, callerReference){	
+AjaxWrapper.prototype._sendContinousRequest = function(urlTemplate, successCallBack, callerReference){	
 	var that = this;
 	$.ajax({
-		   url:        '../priceWidget?url=' + url,
+		   url:        '../priceWidget?url=' + urlTemplate.randomize().value(),
 		   type:       "GET",
 		   dataType:   "text",
 		   complete: function(xhr){
@@ -19,7 +19,7 @@ AjaxWrapper.prototype._sendContinousRequest = function(url, successCallBack, cal
 
 						if(that.canFireRequest) {
 							console.log("timerId", that.timerId);
-							that._sendContinousRequest(url, successCallBack, callerReference);
+							that._sendContinousRequest(urlTemplate, successCallBack, callerReference);
 						}
 		    	},100);		       
 		   },

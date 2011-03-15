@@ -26,7 +26,7 @@ PriceWidgetController.prototype.reset = function() {
 }
 
 PriceWidgetController.prototype._getResponse = function(){
-	this.ajaxWrapper.sendContinousRequest(this.urlTemplate.randomize().value(), this._successCallback, this);
+	this.ajaxWrapper.sendContinousRequest(this.urlTemplate, this._successCallback, this);
 };
 
 PriceWidgetController.prototype._successCallback = function(response){	
