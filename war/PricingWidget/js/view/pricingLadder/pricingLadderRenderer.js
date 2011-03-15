@@ -1,7 +1,7 @@
 var PricingLadderRenderer = function(){
 	this.timerId = -1;
-	this.currentBidData = new BidData();
-	this.currentAskData = new AskData();
+	this.currentBestBidData = new PriceData();
+	this.currentBestAskData = new PriceData();
 };
 
 PricingLadderRenderer.prototype.render = function(pricingModel){
@@ -13,29 +13,25 @@ PricingLadderRenderer.prototype.render = function(pricingModel){
 };
 
 PricingLadderRenderer.prototype._updatePricingLadder = function(askSteps, bidSteps){
-	this._clearTimeIfRunning();	
-		
+	clearTimeout(this.timerId);
 	var pricingLadder = this._getPricingLadder()[0];
-//	var resetFragment = this._createTableFragement(askSteps, bidSteps);
-//	
-//	askSteps.determinePriceChange(this.currentAskData);
-//	bidSteps.determinePriceChange(this.currentBidData);
-//	
-//	this.currentBidData = bidSteps;
-//	this.currentAskData = askSteps;
-	
-	var flashFragment = this._createTableFragement(askSteps, bidSteps);
-	pricingLadder.replaceChild(flashFragment, pricingLadder.firstChild);
-//	this.timerId = setTimeout(function(){
-//		pricingLadder.replaceChild(resetFragment, pricingLadder.firstChild);
-//	},100);	
-};
+	var resetFragment = this._createTableFragement(askSteps, bidSteps);	
 
-PricingLadderRenderer.prototype._clearTimeIfRunning = function(){
-	if (-1 != this.timerId)
-	{
-		clearTimeout(this.timerId);
-	}
+	var bestBidStep = bidSteps[0];
+	var bestAskStep = askSteps[askSteps.length -1];
+	
+	bestBidStep.determinePriceChange(this.currentBestBidData);
+	bestAskStep.determinePriceChange(this.currentBestAskData);
+	
+	this.currentBestBidData = bestBidStep;
+	this.currentBestAskData = bestAskStep;
+	
+	var flashFragment = this._createTableFragement(askSteps, bidSteps);	
+	pricingLadder.replaceChild(flashFragment, pricingLadder.firstChild);
+	
+	this.timerId = setTimeout(function(){
+		pricingLadder.replaceChild(resetFragment, pricingLadder.firstChild);
+	},300);	
 };
 
 PricingLadderRenderer.prototype._updatePricingLadderTitle = function(title){
@@ -91,12 +87,14 @@ PricingLadderRenderer.prototype._createStepRowFrom = function(step, isAskStep){
 	if(isAskStep){
 		stepRow.appendChild(this._createStepCellFrom('','buy_column'));
 		stepRow.appendChild(this._createStepCellFrom(step.price));
-		stepRow.appendChild(this._createStepCellFrom(step.quantity, 'sell_column'));
+		var quantityCell = stepRow.appendChild(this._createStepCellFrom(step.quantity, 'sell_column'));
+		step.priceChanged && $(quantityCell).addClass('sell_move');
 	}
 	else{
-		stepRow.appendChild(this._createStepCellFrom(step.quantity, 'buy_column'));
+		var quantityCell = stepRow.appendChild(this._createStepCellFrom(step.quantity, 'buy_column'));
 		stepRow.appendChild(this._createStepCellFrom(step.price));
 		stepRow.appendChild(this._createStepCellFrom('', 'sell_column'));
+		step.priceChanged && $(quantityCell).addClass('buy_move');
 	}
 	return stepRow;
 };

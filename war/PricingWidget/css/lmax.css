@@ -114,12 +114,10 @@ td
 
 .sell_column
 {
-	color: #000;
-	font-weight:bold;
 	border-right:0px solid #000;
 }
 
-.buy_column
+.buy_column, .sell_column 
 {
 	color: #000;
 	font-weight:bold;	
