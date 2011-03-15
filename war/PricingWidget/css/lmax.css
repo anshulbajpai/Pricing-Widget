@@ -44,11 +44,11 @@ body
 	border-collapse: collapse;
 }
 
-.instrument_column_hover {
+.instrument_column_hover td {
 	background-color: #ccc;
 }
 
-.selected_instrument{
+.selected_instrument td{
 	background-color: black;
 	color:#fff;
 }
@@ -131,6 +131,7 @@ td
 	text-align: left;
 	width: 55px;
 	border: none;
+	cursor:pointer;	
 }
 
 .choice_market
