@@ -142,12 +142,15 @@ function Instrument(data)
 		this.spread = "NA";
 	else{
 		var spread = calculateSpread(parseTradeData(dataItems[3]), parseTradeData(dataItems[4]));
-		this.spread = Math.round(spread*Math.pow(10,5))/Math.pow(10,5);
+		this.spread = roundToFiveDecimalPlace(spread);
 	}
 }
 
-function calculateSpread(bidData, askData){
-	
+function roundToFiveDecimalPlace(value){
+	return Math.round(value*Math.pow(10,5))/Math.pow(10,5);
+}
+
+function calculateSpread(bidData, askData){	
 	return calculatePrice(askData[askData.length-1]) - calculatePrice(bidData[0]);
 }
 
@@ -157,7 +160,6 @@ function parseTradeData(data){
 
 function calculatePrice(data){	
 	return parseFloat(data.split('@')[1]);
-	
 }
 
 function parseInstruments(responseData)
