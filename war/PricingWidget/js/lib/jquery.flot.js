@@ -543,22 +543,7 @@
             
             canvasWidth = placeholder.width();
             canvasHeight = placeholder.height();
-            var checkCanvas = placeholder.children('canvas');
-                        if (checkCanvas.length && 
-                            (checkCanvas.get(0).width == canvasWidth) && 
-                            (checkCanvas.get(0).height == canvasHeight)){
-                            canvas = checkCanvas.get(0);
-                            ctx = canvas.getContext('2d');
-                            overlay = checkCanvas.get(1);
-                            octx = overlay.getContext('2d');
-                            
-                            //do whatever manual clearing is necessary here
-                            ctx.clearRect(0,0,canvasWidth,canvasHeight);
-                            octx.clearRect(0,0,canvasWidth,canvasHeight);
-                            unbindEvents();
-                        } else {
-                            placeholder.get(0).innerHTML = ''; //this helps with leaky memory possibly 
-            //placeholder.html(""); // clear placeholder 
+            placeholder.html(""); // clear placeholder
             if (placeholder.css("position") == 'static')
                 placeholder.css("position", "relative"); // for positioning labels and overlay
 
@@ -575,7 +560,6 @@
             // overlay canvas for interactive features
             overlay = $(makeCanvas(canvasWidth, canvasHeight)).css({ position: 'absolute', left: 0, top: 0 }).appendTo(placeholder).get(0);
             octx = overlay.getContext("2d");
-            }                        
             octx.stroke();
         }
 
@@ -594,13 +578,6 @@
             executeHooks(hooks.bindEvents, [eventHolder]);
         }
 
-        function unbindEvents() {
-            // we include the canvas in the event holder too, because IE 7
-            // sometimes has trouble with the stacking order
-            eventHolder = $([overlay, canvas]);
-            eventHolder.unbind();
-        }
-        
         function setupGrid() {
             function setTransformationHelpers(axis, o) {
                 function identity(x) { return x; }
