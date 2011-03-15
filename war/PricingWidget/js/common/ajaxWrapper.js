@@ -5,13 +5,14 @@ var AjaxWrapper = function(){
 
 AjaxWrapper.prototype.sendContinousRequest = function(urlTemplate, successCallBack, callerReference){
 	this.canFireRequest = true;
-	this._sendContinousRequest(urlTemplate, successCallBack, callerReference);
+	this.urlTemplate = urlTemplate;
+	this._sendContinousRequest(this.urlTemplate.randomize().withoutBlock().value(), successCallBack, callerReference);
 };
 
-AjaxWrapper.prototype._sendContinousRequest = function(urlTemplate, successCallBack, callerReference){	
+AjaxWrapper.prototype._sendContinousRequest = function(url, successCallBack, callerReference){	
 	var that = this;
 	$.ajax({
-		   url:        '../priceWidget?url=' + urlTemplate.randomize().value(),
+		   url:        '../priceWidget?url=' + url,
 		   type:       "GET",
 		   dataType:   "text",
 		   complete: function(xhr){
@@ -19,7 +20,7 @@ AjaxWrapper.prototype._sendContinousRequest = function(urlTemplate, successCallB
 
 						if(that.canFireRequest) {
 							console.log("timerId", that.timerId);
-							that._sendContinousRequest(urlTemplate, successCallBack, callerReference);
+							that._sendContinousRequest(that.urlTemplate.randomize().value(), successCallBack, callerReference);
 						}
 		    	},100);		       
 		   },

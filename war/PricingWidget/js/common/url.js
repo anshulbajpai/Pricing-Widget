@@ -3,7 +3,11 @@ var Url = function(url){
 };
 
 Url.prototype.randomize = function(){
-	return new Url(this.url + '&rand=' + this._getRandomNumber());
+	return new Url(this.url + '?rand=' + this._getRandomNumber());
+};
+
+Url.prototype.withoutBlock = function(){
+	return new Url(this.url + '&init=true');
 };
 
 Url.prototype._getRandomNumber = function(){

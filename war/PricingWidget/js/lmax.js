@@ -29,7 +29,7 @@ var pollUrl = baseUrl + "longPoll/";
 var pricingLadderWidget = new PricingLadderWidget(new PricingLadderRenderer());
 var priceChartWidget = new PriceChartWidget(new PriceChart("#price-chart"));
 
-var pricingUrlTemplate = new Url(pollUrl + '?init=true');
+var pricingUrlTemplate = new Url(pollUrl);
 var pricingAjaxWrapper = new AjaxWrapper();
 var pricingDataParser = new PricingDataParser();
 var priceWidgets =  new PriceWidgets([pricingLadderWidget, priceChartWidget]);
@@ -82,7 +82,7 @@ function longPollCallback()
 function sendLongPoll()
 {
 	xhr = createXmlHttpRequest();
-	xhr.open("GET", '../priceWidget?url=' + pollUrl + xhrCounter++ + '&init=true' , true);
+	xhr.open("GET", '../priceWidget?url=' + pollUrl + xhrCounter++, true);
 	xhr.onreadystatechange = longPollCallback;
 	xhr.send("");
 }
