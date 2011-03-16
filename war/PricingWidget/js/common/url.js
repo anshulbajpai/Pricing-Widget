@@ -3,7 +3,7 @@ var Url = function(url){
 };
 
 Url.prototype.randomize = function(){
-	return new Url(this.url + '?rand=' + this._getRandomNumber());
+	return new Url(this.url + '&rand=' + this._getRandomNumber());
 };
 
 Url.prototype.withoutBlock = function(){
@@ -16,4 +16,12 @@ Url.prototype._getRandomNumber = function(){
 
 Url.prototype.value = function() {    
     return this.url;
+};
+
+Url.prototype.format = function() {
+	var formatted = this.url;
+	for(var i = 0; i < arguments.length; i++) {
+		formatted = formatted.replace("{" + i + "}", arguments[i]);
+	}
+	return new Url(formatted);
 };
