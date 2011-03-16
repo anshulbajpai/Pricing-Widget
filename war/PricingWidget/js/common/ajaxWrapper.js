@@ -17,11 +17,9 @@ AjaxWrapper.prototype._sendContinousRequest = function(url, successCallBack, cal
 		   dataType:   "text",
 		   complete: function(xhr){
 				that.timerId = setTimeout(function(){
-
-						if(that.canFireRequest) {
-							console.log("timerId", that.timerId);
-							that._sendContinousRequest(that.urlTemplate.randomize().value(), successCallBack, callerReference);
-						}
+					if(that.canFireRequest) {
+						that._sendContinousRequest(that.urlTemplate.randomize().value(), successCallBack, callerReference);
+					}
 		    	},100);		       
 		   },
 		   success:    function(data){
