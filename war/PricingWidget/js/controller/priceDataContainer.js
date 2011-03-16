@@ -42,7 +42,8 @@ PriceDataContainer.prototype.add = function(pricingModel){
 PriceDataContainer.prototype._spit = function(){
 	var bidData = this.bestBidData.hasData() ? this.bestBidData : this.lastReceivedBidData;
 	var askData = this.bestAskData.hasData() ? this.bestAskData : this.lastReceivedAskData;
-	this._resetBestData();
-	this.callback.call(this.callerReference, new PriceModel(this.title, bidData.data, askData.data));	
+	this._resetBestData();	
+	if(bidData.hasData() && askData.hasData())
+		this.callback.call(this.callerReference, new PriceModel(this.title, bidData.data, askData.data));	
 	verifier.addFinalUpdate(bidData, askData);
 };

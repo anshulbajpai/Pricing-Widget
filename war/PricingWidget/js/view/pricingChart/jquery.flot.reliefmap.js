@@ -15,7 +15,7 @@
     var data = null, canvas = null, target = null, axes = null, offset = null, highlights = [];
 
     function drawPointDefault(ctx, series, x, y, alpha, color, isAskPoint) {
-        ctx.fillStyle = isAskPoint ? "rgba(255, 0, 0, " + alpha + ")" : "rgba(0, 0, 2255, " + alpha + ")";
+        ctx.fillStyle = isAskPoint ? "rgba(255, 0, 0, " + alpha + ")" : "rgba(0, 0, 255, " + alpha + ")";
         ctx.strokeStyle = color;
         ctx.lineWidth = series.map.lineWidth;
 
@@ -49,22 +49,50 @@
             axes = plot.getAxes();
             offset = plot.getPlotOffset();
             data = plot.getData();
+            
+            var yAxisOptions = plot.getOptions().yaxis;
+            var lastSeries = data[data.length -1].data;
+            var averageBestPrice = getAverageOverBestPrice(lastSeries);
+            var allSeriesMinPrice = yAxisOptions.min
+            var allSeriesMaxPrice = yAxisOptions.max;  
+            var bidGap = averageBestPrice - allSeriesMinPrice;
+            var askGap = allSeriesMaxPrice - averageBestPrice;
+            var gap = askGap > bidGap ?  askGap : bidGap;
+            var maxY = averageBestPrice + gap;
+            var minY = averageBestPrice - gap;
+            
+            yAxisOptions = {min : minY, max : maxY};
+            
+            function getYCoordinateFrom(price){
+            	return plot.height()*((price - minY)/(maxY- minY));
+            }            
+            
             for (var i = 0; i < data.length; i++) {
                 series = data[i];
                 if (series.map.show) {
-                    for (var j = 0; j < series.data.length; j++) {
-                        drawpoint(ctx, series, series.data[j], series.color, data.length);
+                    for (var j = 0; j < series.data.length; j++) {                    	
+                        drawpoint(ctx, series, series.data[j], getYCoordinateFrom, series.color, data.length);
                     }
                 }
             }
         }
+        
+        function getAverageOverBestPrice(series){
+            for(var i = 0; i < series.length; i++){
+            	if(series[i][3] == false){
+            		var bestBidPrice = series[i][1];
+            		var bestAskPrice = series[i-1][1];
+            		return ( bestAskPrice +  bestBidPrice)/2
+            	}
+            }
+        }
 
-        function drawpoint(ctx, series, data, color, noOfSeries) {
+        function drawpoint(ctx, series, data, getYCoordinateFrom, color, noOfSeries) {
             var x,y;
             var xCoord = plot.width() - ((noOfSeries - data[0])*series.map.pointDimension) ;
             x = offset.left + xCoord;
+            y = offset.top + getYCoordinateFrom(data[1]);
             if(x > offset.left){
-	            y = offset.top + axes.yaxis.p2c(data[1]);
 	            series.map.drawpoint(ctx, series, x, y, data[2], color, data[3]);
 	        }
         }

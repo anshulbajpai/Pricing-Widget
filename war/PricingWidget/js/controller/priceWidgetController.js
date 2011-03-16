@@ -13,10 +13,10 @@ PriceWidgetController.prototype._updateWidgets = function(pricingModel){
 
 PriceWidgetController.prototype.show = function(instrumentId){
 	this.instrumentId = instrumentId;
-	this.priceDataContainer.reset();
-	this.priceDataContainer.init();
+	this.priceDataContainer.reset();	
 	this.priceWidgets.reset();
-	this._getResponse();	
+	this._getResponse();
+	this.priceDataContainer.init();
 };
 
 PriceWidgetController.prototype.reset = function() {
