@@ -49,10 +49,13 @@
             
             var yAxisOptions = plot.getOptions().yaxis;
             var yAxisBounds = getYAxisBounds(data[data.length -1].data, yAxisOptions); 
-            yAxisOptions = {min : yAxisBounds.minY, max : yAxisBounds.maxY};
+            plot.getOptions().yaxis.min = yAxisBounds.minY;
+            plot.getOptions().yaxis.max = yAxisBounds.maxY;
+
+            plot.setupGrid();
             
             function getYCoordinateFrom(price){
-            	return plot.height()*((price - yAxisBounds.minY)/(yAxisBounds.maxY- yAxisBounds.minY));
+            	return plot.height() - (plot.height()*((price - yAxisBounds.minY)/(yAxisBounds.maxY- yAxisBounds.minY)));
             }            
             
             for (var i = 0; i < data.length; i++) {
