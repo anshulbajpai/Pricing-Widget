@@ -33,13 +33,10 @@
 
     function init(plot) {
         plot.hooks.processOptions.push(processOptions);
-
         function processOptions(plot, options) {
             if (options.series.map.active) {
                 plot.hooks.draw.push(draw);
-                plot.hooks.bindEvents.push(bindEvents);
-                plot.hooks.drawOverlay.push(drawOverlay);
-            }
+           }
         }
 
         function draw(plot, ctx) {
@@ -51,20 +48,11 @@
             data = plot.getData();
             
             var yAxisOptions = plot.getOptions().yaxis;
-            var lastSeries = data[data.length -1].data;
-            var averageBestPrice = getAverageOverBestPrice(lastSeries);
-            var allSeriesMinPrice = yAxisOptions.min
-            var allSeriesMaxPrice = yAxisOptions.max;  
-            var bidGap = averageBestPrice - allSeriesMinPrice;
-            var askGap = allSeriesMaxPrice - averageBestPrice;
-            var gap = askGap > bidGap ?  askGap : bidGap;
-            var maxY = averageBestPrice + gap;
-            var minY = averageBestPrice - gap;
-            
-            yAxisOptions = {min : minY, max : maxY};
+            var yAxisBounds = getYAxisBounds(data[data.length -1].data, yAxisOptions); 
+            yAxisOptions = {min : yAxisBounds.minY, max : yAxisBounds.maxY};
             
             function getYCoordinateFrom(price){
-            	return plot.height()*((price - minY)/(maxY- minY));
+            	return plot.height()*((price - yAxisBounds.minY)/(yAxisBounds.maxY- yAxisBounds.minY));
             }            
             
             for (var i = 0; i < data.length; i++) {
@@ -75,6 +63,18 @@
                     }
                 }
             }
+        }
+        
+        function getYAxisBounds(lastSeriesData, yAxisOptions){
+            var averageBestPrice = getAverageOverBestPrice(lastSeriesData);
+            var allSeriesMinPrice = yAxisOptions.min
+            var allSeriesMaxPrice = yAxisOptions.max;  
+            var bidGap = averageBestPrice - allSeriesMinPrice;
+            var askGap = allSeriesMaxPrice - averageBestPrice;
+            var gap = askGap > bidGap ?  askGap : bidGap;
+            var maxY = averageBestPrice + gap;
+            var minY = averageBestPrice - gap;
+            return {maxY : maxY, minY : minY}
         }
         
         function getAverageOverBestPrice(series){
@@ -95,45 +95,6 @@
             if(x > offset.left){
 	            series.map.drawpoint(ctx, series, x, y, data[2], color, data[3]);
 	        }
-        }
-
-        function bindEvents(plot, eventHolder) {
-            var r = null;
-            var options = plot.getOptions();
-            var hl = new HighLighting(plot, eventHolder, findNearby, options.series.map.active, highlights)
-        }
-
-        function findNearby(plot, mousex, mousey) {
-            var series, r;
-            axes = plot.getAxes();
-            for (var i = 0; i < data.length; i++) {
-                series = data[i];
-                if (series.map.show) {
-                    for (var j = 0; j < series.data.length; j++) {
-                        var dataitem = series.data[j];
-                        var dx = Math.abs(axes.xaxis.p2c(dataitem[0]) - mousex)
-                                , dy = Math.abs(axes.yaxis.p2c(dataitem[1]) - mousey)
-                                , dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist <= dataitem[2]) {
-                            r = {i: i,j: j};
-                        }
-                    }
-                }
-            }
-            return r;
-        }
-
-        function drawOverlay(plot, octx) {
-            octx.save();
-            octx.clearRect(0, 0, target.width, target.height);
-            for (i = 0; i < highlights.length; ++i) {
-                drawHighlight(highlights[i]);
-            }
-            octx.restore();
-            function drawHighlight(s) {
-                var c = "rgba(255, 255, 255, " + s.series.bubbles.highlight.opacity + ")";
-                drawpoint(octx, s.series, s.point, c, true);
-            }
         }
     }
 
