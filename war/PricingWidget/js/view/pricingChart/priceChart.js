@@ -24,11 +24,12 @@ PriceChart.prototype._createFreshPriceChartViewModel = function(){
 PriceChart.prototype.drawChart = function() {
 	var data = this.data.getData();
 	var priceBound = data.priceBound;
-	this.options.yaxis = {min : priceBound.minPrice, max : priceBound.maxPrice};
+	
+	this.options.y2axis = {min : priceBound.minPrice, max : priceBound.maxPrice};	
 	if(!this.plot)
 		this.plot = $.plot($(this.containerId),data.dataPoints , this.options);
 	else{
-		this.plot.getOptions().yaxis = this.options.yaxis;
+		this.plot.getOptions().y2axis = this.options.y2axis;
 		this.plot.setData(data.dataPoints);
 		this.plot.setupGrid();
 		this.plot.draw();		
