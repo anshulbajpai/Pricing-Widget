@@ -47,12 +47,13 @@
             offset = plot.getPlotOffset();
             data = plot.getData();
             
-            var yAxisOptions = plot.getOptions().y2axis;
+            var yAxisOptions = plot.getOptions().yaxis;
             var yAxisBounds = getYAxisBounds(data[data.length -1].data, yAxisOptions); 
-            plot.getOptions().y2axis.min = yAxisBounds.minY;
-            plot.getOptions().y2axis.max = yAxisBounds.maxY;
-            plot.getAxes().yaxis.used = false;
-            plot.getAxes().y2axis.used = true;
+            
+            plot.getOptions().yaxis.min = yAxisBounds.minY;
+            plot.getOptions().yaxis.max = yAxisBounds.maxY;
+            
+            
             plot.setupGrid();
             
             function getYCoordinateFrom(price){
@@ -94,7 +95,7 @@
         function drawpoint(ctx, series, data, getYCoordinateFrom, color, noOfSeries) {
             var x,y;
             var xCoord = plot.width() - ((noOfSeries - data[0])*series.map.pointDimension) ;
-            x = offset.right + xCoord;
+            x = offset.left + xCoord;
             y = offset.top + getYCoordinateFrom(data[1]);
             if(x > offset.left){
 	            series.map.drawpoint(ctx, series, x, y, data[2], color, data[3]);
