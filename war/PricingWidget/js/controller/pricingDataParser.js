@@ -14,9 +14,9 @@ PricingDataParser.prototype._getParsedResponseFrom = function(response){
 PricingDataParser.prototype._createTradeDataFrom = function(tradeDataResponse, isBidStep){
 	var splittedTradeDataResponse = isBidStep ? tradeDataResponse.split(';') : tradeDataResponse.split(';').reverse();
 	var tradeData = isBidStep ? new BidData() : new AskData();
-	for(var i = 0; i < splittedTradeDataResponse.length ; i++){	
-		var priceData = splittedTradeDataResponse[i].split('@');
-		tradeData.add(new PriceData(parseInt(priceData[0]),parseFloat(priceData[1])));
-	}
+	$(splittedTradeDataResponse).each(function(index, eachInstrumentResponse){
+		var priceData = eachInstrumentResponse.split('@');
+		tradeData.add(new PriceData(parseInt(priceData[0]),parseFloat(priceData[1])));		
+	});
 	return tradeData;
 };
