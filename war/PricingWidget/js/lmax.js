@@ -104,7 +104,7 @@ function processResponseData(responseData)
 	var fragment = createTableFragment(instruments);
 	displayDiv.replaceChild(fragment, displayDiv.firstChild);
 	if(!selectedInstrument)
-		$('tr span[id="EUR/USD"]').parent().parent().trigger('click');
+		$('tr[instrumentId=4001]').trigger('click');
 }
 
 function addHeadersToTable(tableTag, headers)
