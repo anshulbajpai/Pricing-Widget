@@ -47,14 +47,17 @@
             offset = plot.getPlotOffset();
             data = plot.getData();
             
-            var yAxisOptions = plot.getOptions().yaxis;
+            var yAxisOptions = plot.getOptions().y2axis;
             var yAxisBounds = getYAxisBounds(data[data.length -1].data, yAxisOptions); 
             
-            plot.getOptions().yaxis.min = yAxisBounds.minY;
-            plot.getOptions().yaxis.max = yAxisBounds.maxY;
+            plot.getOptions().y2axis.min = yAxisBounds.minY;
+            plot.getOptions().y2axis.max = yAxisBounds.maxY;
             
+            axes.yaxis.used = false;
+            axes.y2axis.used = true;
             
             plot.setupGrid();
+            
             
             function getYCoordinateFrom(price){
             	return plot.height() - (plot.height()*((price - yAxisBounds.minY)/(yAxisBounds.maxY- yAxisBounds.minY)));

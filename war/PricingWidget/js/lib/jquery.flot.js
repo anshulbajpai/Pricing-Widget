@@ -1186,6 +1186,7 @@
             }
 
             axis = axes.yaxis;
+            var y2TicksFullWidth = (axis.ticks.length == 0);
             for (i = 0; i < axis.ticks.length; ++i) {
                 v = axis.ticks[i].v;
                 if (v <= axis.min || v >= axis.max)
@@ -1211,8 +1212,8 @@
                 if (v <= axis.min || v >= axis.max)
                     continue;
 
-                ctx.moveTo(plotWidth-5, Math.floor(axis.p2c(v)) + ctx.lineWidth/2);
-                ctx.lineTo(plotWidth+5, Math.floor(axis.p2c(v)) + ctx.lineWidth/2);
+                ctx.moveTo(y2TicksFullWidth ? 0 : plotWidth - 5, Math.floor(axis.p2c(v)) + ctx.lineWidth / 2);
+                ctx.lineTo(y2TicksFullWidth ? plotWidth : plotWidth + 5, Math.floor(axis.p2c(v)) + ctx.lineWidth / 2);            
             }
             
             ctx.stroke();
