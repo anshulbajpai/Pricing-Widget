@@ -31,9 +31,10 @@ body
 .price-chart{
 	float: left;
 	clear:none;
-	width : 247px!important;
+	width : 204px!important;
 	height : 270px;
 	margin-top:-6px;
+	position:relative;
 	
 }
 .ladderContainer
@@ -179,4 +180,12 @@ td
 .pricingLadder
 {
 	border: 0px solid #000;	
+}
+
+.point {
+	float:left;
+	position:absolute;
+	background-color: green;
+	width:3px;
+	height:3px;
 }

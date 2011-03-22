@@ -17,7 +17,7 @@ PriceChartWidget.prototype.update = function(pricingModel) {
 	for(var j =0; j < bidData.length; j++){
 		this._updateGraphData(bidData[j], bidMaxQuantity, i+j, false);
 	}
-	
+	this.priceChart.clearChart();
 	this.priceChart.drawChart();
 	this.count++;
 };
