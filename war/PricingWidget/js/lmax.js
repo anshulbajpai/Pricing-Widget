@@ -27,7 +27,7 @@ var baseUrl = "http://marketdata.lmaxtrader.com/";
 var pollUrl = baseUrl + "longPoll/";
 
 var pricingLadderWidget = new PricingLadderWidget(new PricingLadderRenderer());
-var priceChartWidget = new PriceChartWidget(new PriceChart("#price-chart"));
+var priceChartWidget = new PriceChartWidget(new PriceChart("#price-chart-container"));
 
 var pricingUrlTemplate = new Url(pollUrl+"?orderBookId={0}");
 var pricingAjaxWrapper = new AjaxWrapper();

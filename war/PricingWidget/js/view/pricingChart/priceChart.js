@@ -1,11 +1,14 @@
 var PriceChart = function (containerId) {
     this.data = this._createFreshPriceChartViewModel();
     this.containerId = containerId;
-	this.options = {series : { map: { pointDimension: 3, active: true, show: true}}, xaxis : {noTicks : true}, yaxis : {noTicks : true}, grid : {aboveData : true}};
-	this.plot = null;
 };
 
 PriceChart.prototype.MAX_SERIES = 67;
+PriceChart.prototype.PRICE_CHART_WIDTH = 204; //in pixels
+PriceChart.prototype.PRICE_CHART_TICK_WIDTH = 43; //in pixels
+PriceChart.prototype.PRICE_CHART_HEIGHT = 270; //in pixels
+PriceChart.prototype.POINT_HEIGHT = 3; //in pixels
+PriceChart.prototype.LABEL_WIDTH = 3; //in pixels
 
 PriceChart.prototype.setDataPoint = function(seriesNumber, pointId, dataPoint) {
 	this.data.insert(seriesNumber, pointId, dataPoint);
@@ -14,7 +17,6 @@ PriceChart.prototype.setDataPoint = function(seriesNumber, pointId, dataPoint) {
 PriceChart.prototype.reset = function(){
 	this.data = this._createFreshPriceChartViewModel();
 	$(this.containerId).text('');
-	this.plot = null;
 };
 
 PriceChart.prototype._createFreshPriceChartViewModel = function(){
@@ -26,37 +28,28 @@ PriceChart.prototype.drawChart = function() {
 	var priceBound = data.priceBound;
 	
 	var yaxisOptions = {min : priceBound.minPrice, max : priceBound.maxPrice};	
-	var yAxisBounds = this._getYAxisBounds(data.dataPoints[data.dataPoints.length -1], yaxisOptions);
+	var yaxisBounds = this._getYAxisBounds(data.dataPoints[data.dataPoints.length -1], yaxisOptions);
 	
-	this._prepareTicks(yaxisOptions);
-	this._setTicks(yaxisOptions);
+	var ticks = this._prepareTicks(yaxisBounds);
+	
+	var chartGraphContainer = this._createDivElement("price-chart", "price-chart");
+	var tickLabelsContainer = this._createDivElement("price-chart-ticks", "price-chart-ticks");
+	$(this.containerId).append(chartGraphContainer);
+	$(this.containerId).append(tickLabelsContainer);
+	
+	this._insertTicks(ticks, yaxisOptions, yaxisBounds);
 	
 	for (var i = 0; i < data.dataPoints.length; i++) {
         series = data.dataPoints[i];
         for (var j = 0; j < series.length; j++) {                    	
-            this._drawpoint(series, series[j], series.color, data.dataPoints.length, yAxisBounds);
+            this._drawpoint(series, series[j], series.color, data.dataPoints.length, yaxisBounds);
         }
     }
 };
 
-//PriceChart.prototype.drawChart = function() {
-//	var data = this.data.getData();
-//	var priceBound = data.priceBound;
-//	
-//	this.options.y2axis = {min : priceBound.minPrice, max : priceBound.maxPrice};	
-//	if(!this.plot)
-//		this.plot = $.plot($(this.containerId),data.dataPoints , this.options);
-//	else{
-//		this.plot.getOptions().y2axis = this.options.y2axis;
-//		this.plot.setData(data.dataPoints);
-//		this.plot.setupGrid();
-//		this.plot.draw();		
-//	}
-//};
-
 PriceChart.prototype.clearChart = function() {
-	$("#price-chart").html("");
-}
+	$(this.containerId).html("");
+};
 
 
 PriceChart.prototype._getYAxisBounds = function(lastSeriesData, yaxisOptions){
@@ -81,91 +74,75 @@ PriceChart.prototype._getAverageOverBestPrice = function(series){
     }
 };
 
-PriceChart.prototype._drawpoint = function(series, data, color, noOfSeries, yAxisBounds) {
+PriceChart.prototype._drawpoint = function(series, data, color, noOfSeries, yaxisBounds) {
     var x,y;
     var xCoord = 204 - ((noOfSeries - data[0])*3) ;
     x = xCoord;
-    y = this._getYCoordinateFrom(data[1], yAxisBounds);
+    y = this._getYCoordinateFrom(data[1], yaxisBounds) - 1.5;
     var point = this._createPoint(x, y, data[2], color, data[3]);
     $("#price-chart").append(point);
 };
 
 PriceChart.prototype._createPoint = function(x, y, alpha, color, isAskPoint) {
 	var point = document.createElement('div');
-	point.className = "point";
-	point.style.left = x+"px";
-	point.style.top = y+"px";
-	point.style.backgroundColor = isAskPoint ? "rgb(255, 0, 0)" : "rgb(0, 0, 255)";
+	$(point).addClass("point");
+	$(point).css("left", x+"px");
+	$(point).css("top", y+"px");
+	$(point).css("top", y+"px");
+	var backgroundColor = isAskPoint ? "rgb(255, 0, 0)": "rgb(0, 0, 255)";
+	$(point).css("backgroundColor", backgroundColor);
 	$(point).fadeTo(0,alpha);
 	return point;
 };
 
-PriceChart.prototype._getYCoordinateFrom = function(price, yAxisBounds){
-	return 270 - (270*((price - yAxisBounds.minY)/(yAxisBounds.maxY- yAxisBounds.minY)));
+PriceChart.prototype._getYCoordinateFrom = function(price, yaxisBounds){
+	return this.PRICE_CHART_HEIGHT - (this.PRICE_CHART_HEIGHT*((price - yaxisBounds.minY)/(yaxisBounds.maxY- yaxisBounds.minY)));
 };
 
-PriceChart.prototype._prepareTicks = function(yaxisOptions){
-	var chartHeight = 270;
-	var noTicks = 0.3 * Math.sqrt(chartHeight);
-	var delta = (yaxisOptions.max - yaxisOptions.min) / noTicks;
-	var dec = -Math.floor(Math.log(delta) / Math.LN10);
-	var magn = Math.pow(10, -dec);
-	norm = delta / magn; 
-	
-	if (norm < 1.5)
-        size = 1;
-    else if (norm < 3) {
-        size = 2;
-        // special case for 2.5, requires an extra decimal
-        if (norm > 2.25 && (maxDec == null || dec + 1 <= maxDec)) {
-            size = 2.5;
-            ++dec;
-        }
+PriceChart.prototype._prepareTicks = function(yaxisBounds){
+	var ticks = [];
+	var tickDecimals = 5;
+	var gap = yaxisBounds.maxY - yaxisBounds.minY;
+	var noOfTicks = 10;
+	var labelAvg = gap/noOfTicks;
+	var value = yaxisBounds.maxY - labelAvg;
+	for(i = 0; i < 9; i++) {
+		ticks.push({value: value, label:value.toFixed(tickDecimals)})
+		value -= labelAvg;
+	}
+	return ticks;
+};
+
+PriceChart.prototype._insertTicks = function(ticks, yaxisOptions, yaxisBounds){
+	var chartWidth = 204;
+	for (var i = 0; i < ticks.length; ++i) {
+        var tick = ticks[i];
+        var y = this._getYCoordinateFrom(tick.value, yaxisBounds);
+        this._drawTickLabel(tick.label, y-5);
+        this._drawLine(y, this.PRICE_CHART_WIDTH);
     }
-    else if (norm < 7.5)
-        size = 5;
-    else
-        size = 10;
-
-    size *= magn;
-    yaxisOptions.tickDecimals = dec;
-    
-    generator = function (axis) {
-        var ticks = [];
-
-        // spew out all possible ticks
-        var start =  axis.tickSize * Math.floor(axis.min / axis.tickSize);
-        var   i = 0, v = Number.NaN, prev;
-        do {
-            prev = v;
-            v = start + i * axis.tickSize;
-            ticks.push({ v: v, label: axis.tickFormatter(v, axis) });
-            ++i;
-        } while (v < axis.max && v != prev);
-        return ticks;
-    };
-
-    formatter = function (v, axis) {
-        return v.toFixed(axis.tickDecimals);
-    };
-    
-    yaxisOptions.tickSize = size;
-    yaxisOptions.tickGenerator = generator;
-    yaxisOptions.tickFormatter = formatter;
 };
 
-PriceChart.prototype._setTicks = function(yaxisOptions) {
-    var yaxis = {};
-	yaxis.ticks = [];
-
-	yaxis.ticks = yaxisOptions.tickGenerator(yaxisOptions);
-    return yaxis;
+PriceChart.prototype._drawTickLabel = function(label, y){
+	var tickLabel = document.createElement('div');
+	$(tickLabel).addClass("tick-label");
+	$(tickLabel).css("top", y + "px");
+	$(tickLabel).text(label);
+	$("#price-chart-ticks").append(tickLabel);
 };
 
-PriceChart.prototype._floorInBase = function(n, base) {
-    return base * Math.floor(n / base);
+PriceChart.prototype._drawLine = function(y, lineWidth){
+	var line = document.createElement('div');
+	$(line).addClass("line");
+	$(line).css("top", y + "px");
+	$(line).css("width", lineWidth + "px");
+    $("#price-chart").append(line);
 };
 
-
-
+PriceChart.prototype._createDivElement = function(name, className) {
+	var divElement = document.createElement('div');
+	$(divElement).attr("id", name);
+	$(divElement).addClass(className);
+	return divElement;
+};
 
