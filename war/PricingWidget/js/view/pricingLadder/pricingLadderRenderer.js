@@ -9,6 +9,7 @@ PricingLadderRenderer.prototype.render = function(pricingModel){
 	var bidSteps = $(pricingModel.bidData);
 	this._getPricingLadder().show();
 	this._updatePricingLadderTitle(pricingModel.title);
+	this._updatePriceChartTitle(pricingModel.title);
 	this._updatePricingLadder(askSteps, bidSteps);
 };
 
@@ -40,8 +41,13 @@ PricingLadderRenderer.prototype._updatePricingLadderTitle = function(title){
 	ladderTitle.show();	
 };
 
+PricingLadderRenderer.prototype._updatePriceChartTitle = function(title){
+	$('#priceChartTitle').text(title);
+	$('#priceChartTitle').show();	
+};
+
 PricingLadderRenderer.prototype._getPricingLadderTitle = function(){
-	return $('.pricingLadderTitle');
+	return $('#pricingLadderTitle');
 };
 
 PricingLadderRenderer.prototype._createTableFragement = function(askSteps, bidSteps){

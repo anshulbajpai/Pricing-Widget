@@ -31,8 +31,8 @@ body
 .price-chart{
 	float: left;
 	clear:none;
-	width : 204px!important;
-	height : 270px;
+	width : 210px!important;
+	height : 238px;
 	/*margin-top:-6px;*/
 	position:relative;
 }
@@ -40,17 +40,18 @@ body
 .price-chart-container{
 	float: left;
 	clear:none;
-	width : 247px!important;
-	height : 270px;
+	width : 279px!important;
+	height : 238px;
 	/*margin-top:-6px;*/
 	position:relative;
+	background: url(../images/chart-background.gif) repeat-x scroll left bottom transparent;
 }
 
 .price-chart-ticks{
 	float: left;
 	clear:none;
 	width : 40px!important;
-	height : 270px;
+	height : 238px;
 	/*margin-top:-6px;*/
 	border-left: 1px solid #6B635D;
 	position:relative;
@@ -211,7 +212,7 @@ td
 
 .tick-label{
 	position:absolute;
-	left:1px;
+	left:3px;
 	width:38px;
 	text-align:left;
 	height:10px;
@@ -224,4 +225,45 @@ td
 	height:2px;
 	background-color:#f4f4f4;
 	margin-left:-2px;
+}
+
+.chartTitle{
+	border: 0px solid #8f8882;	
+	background-color: black;
+    color: #FFE100;
+    font-family: "Arial",sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 0px 0px 1px 0px;
+    padding:3px 5px;      
+}
+
+.chartRightHeader{
+	float:right;
+	color: white; 
+	font-family:Arial; 
+	font-size: 14px;
+	font-weight: normal;
+}
+
+.box{
+	background-color:blue;    
+	border: 1px solid white;
+	display: inline-block;
+	height: 1em;
+	margin-right: 0.2em;
+	vertical-align: top;
+	width: 1em;
+	font-size:12px!important;
+}
+
+.blueBox
+{
+	background-color: #0066FF;
+}
+
+.redBox
+{
+	background-color: #CC0000;
+	margin-left:15px;
 }

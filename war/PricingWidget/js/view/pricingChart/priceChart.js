@@ -3,10 +3,10 @@ var PriceChart = function (containerId) {
     this.containerId = containerId;
 };
 
-PriceChart.prototype.MAX_SERIES = 67;
-PriceChart.prototype.PRICE_CHART_WIDTH = 204; //in pixels
+PriceChart.prototype.MAX_SERIES = 69;
+PriceChart.prototype.PRICE_CHART_WIDTH = 210; //in pixels
 PriceChart.prototype.PRICE_CHART_TICK_WIDTH = 43; //in pixels
-PriceChart.prototype.PRICE_CHART_HEIGHT = 270; //in pixels
+PriceChart.prototype.PRICE_CHART_HEIGHT = 238; //in pixels
 PriceChart.prototype.POINT_HEIGHT = 3; //in pixels
 PriceChart.prototype.LABEL_WIDTH = 3; //in pixels
 
@@ -76,7 +76,7 @@ PriceChart.prototype._getAverageOverBestPrice = function(series){
 
 PriceChart.prototype._drawpoint = function(series, data, color, noOfSeries, yaxisBounds) {
     var x,y;
-    var xCoord = 204 - ((noOfSeries - data[0])*3) ;
+    var xCoord = this.PRICE_CHART_WIDTH - ((noOfSeries - data[0])*3) ;
     x = xCoord;
     y = this._getYCoordinateFrom(data[1], yaxisBounds) - 1.5;
     var point = this._createPoint(x, y, data[2], color, data[3]);
@@ -89,7 +89,7 @@ PriceChart.prototype._createPoint = function(x, y, alpha, color, isAskPoint) {
 	$(point).css("left", x+"px");
 	$(point).css("top", y+"px");
 	$(point).css("top", y+"px");
-	var backgroundColor = isAskPoint ? "rgb(255, 0, 0)": "rgb(0, 0, 255)";
+	var backgroundColor = isAskPoint ? "rgb(0, 0, 255)": "rgb(255, 0, 0)";
 	$(point).css("backgroundColor", backgroundColor);
 	$(point).fadeTo(0,alpha);
 	return point;
@@ -114,7 +114,6 @@ PriceChart.prototype._prepareTicks = function(yaxisBounds){
 };
 
 PriceChart.prototype._insertTicks = function(ticks, yaxisOptions, yaxisBounds){
-	var chartWidth = 204;
 	for (var i = 0; i < ticks.length; ++i) {
         var tick = ticks[i];
         var y = this._getYCoordinateFrom(tick.value, yaxisBounds);

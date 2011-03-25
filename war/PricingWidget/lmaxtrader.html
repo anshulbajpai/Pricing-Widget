@@ -36,16 +36,33 @@
     <title>Price Widget</title> 
 </head> 
 <body> 
-<div style=" padding:0px 0px 0px 10px; width: 620px;">
+<div style=" padding:0px 0px 0px 10px; width: 688px;">
 	<div style=" height: 258px;">
 	<div class="ladder">
 			<div  class="instrumentTitle"><label>Select An Instrument</label></div>
 			<div id="data" class="data"><table></table></div>
 	</div> 
-	
-	<div id="price-chart-container" class="price-chart-container"></div>
-	<!-- div id="price-chart-graph" class="price-chart" style="border:1px solid"></div>
-	<div id="price-chart-ticks" class="price-chart-ticks" style="font-size:smaller;"></div-->		
+
+	<div style="width:279px;padding:0px; margin:0px;float:left;">
+		<div class="chartTitle" >
+			<span class="chartRightHeader">Chart</span>EUR/USD
+		</div>
+		<div style="background-color:#6B635D;color:white;padding:0px 0px;height:24px;">
+			<table border="0" cellspacing="0" cellpadding="0" style="border:0px solid #000!important;font-size:12px!important;" width="100%">
+				<tr>
+					<td style="border:0px solid #000!important;width:75%;text-align:left;padding-top:0px;">
+						<span class="box blueBox"></span>
+						<span>Buy Price</span>
+						<span class="box redBox"></span>
+						<span>Sell Price</span>
+					</td>
+					<td style="border:0px solid #000!important;width:25%;border-left:1px solid #8F8882!important;">Price</td>
+				</tr>
+			</table>
+		</div> 
+		<div id="price-chart-container" class="price-chart-container" style="border:1px; solid"></div>		
+	</div>
+
 	<div class="ladderContainer">
 		<div id="pricingLadderTitle" class="pricingLadderTitle" style="display:none;"></div>
 		<div id="pricingLadder" class="pricingLadder"><table></table></div> 
