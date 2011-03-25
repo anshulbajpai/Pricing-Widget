@@ -33,7 +33,7 @@ body
 	clear:none;
 	width : 204px!important;
 	height : 270px;
-	margin-top:-6px;
+	/*margin-top:-6px;*/
 	position:relative;
 }
 
@@ -42,23 +42,24 @@ body
 	clear:none;
 	width : 247px!important;
 	height : 270px;
-	margin-top:-6px;
+	/*margin-top:-6px;*/
 	position:relative;
 }
 
 .price-chart-ticks{
 	float: left;
 	clear:none;
-	width : 43px!important;
+	width : 40px!important;
 	height : 270px;
-	margin-top:-6px;
+	/*margin-top:-6px;*/
+	border-left: 1px solid #6B635D;
 	position:relative;
 }
 
 .ladderContainer
 {
 	float: left;
-	margin-left : 5px;
+	margin-left : 7px;
 	border: solid 0px #000;
 	clear:none;
 	margin-right:0px;
@@ -210,8 +211,8 @@ td
 
 .tick-label{
 	position:absolute;
-	left:2px;
-	width:33px;
+	left:1px;
+	width:38px;
 	text-align:left;
 	height:10px;
 }
