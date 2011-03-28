@@ -9,7 +9,6 @@ PricingLadderRenderer.prototype.render = function(pricingModel){
 	var bidSteps = $(pricingModel.bidData);
 	this._getPricingLadder().show();
 	this._updatePricingLadderTitle(pricingModel.title);
-	this._updatePriceChartTitle(pricingModel.title);
 	this._updatePricingLadder(askSteps, bidSteps);
 };
 
@@ -41,10 +40,6 @@ PricingLadderRenderer.prototype._updatePricingLadderTitle = function(title){
 	ladderTitle.show();	
 };
 
-PricingLadderRenderer.prototype._updatePriceChartTitle = function(title){
-	$('#priceChartTitle').text(title);
-	$('#priceChartTitle').show();	
-};
 
 PricingLadderRenderer.prototype._getPricingLadderTitle = function(){
 	return $('#pricingLadderTitle');
@@ -56,10 +51,24 @@ PricingLadderRenderer.prototype._createTableFragement = function(askSteps, bidSt
 	pricingLadderTable.append(this._createHeader());
 	var tableBody = $('<tbody>'); 
 	pricingLadderTable.append(tableBody);
-	this._createStepsFrom(askSteps, true, tableBody);
-	this._createStepsFrom(bidSteps, false, tableBody);	
+	this._createAskStepsFrom(askSteps, tableBody);
+	this._createBidStepsFrom(bidSteps, tableBody);	
 	this._decorateLadderSteps($(tableBody.children()))
 	return fragment;
+};
+
+PricingLadderRenderer.prototype._createAskStepsFrom = function(steps, tableBody){
+	if(steps.length < 5) {
+		this._addEmptyStepRows(5 - steps.length, tableBody);
+	}
+	this._createStepsFrom(steps, true, tableBody);
+};
+
+PricingLadderRenderer.prototype._createBidStepsFrom = function(steps, tableBody){
+	this._createStepsFrom(steps, false, tableBody);
+	if(steps.length < 5) {
+		this._addEmptyStepRows(5 - steps.length, tableBody);
+	}
 };
 
 PricingLadderRenderer.prototype._decorateLadderSteps = function(pricingLadderRows){
@@ -90,6 +99,20 @@ PricingLadderRenderer.prototype._createStepsFrom = function(steps, isAskSteps, t
 		var stepRow = that._createStepRowFrom(step, isAskSteps);
 		tableBody.append(stepRow);
 	});
+};
+
+PricingLadderRenderer.prototype._addEmptyStepRows = function(noOfRows, tableBody){
+	for(var i = 0; i < noOfRows; i++) {
+		tableBody.append(this._createEmptyStepRow());
+	}
+};
+
+PricingLadderRenderer.prototype._createEmptyStepRow = function(){
+	var emptyRow = $('<tr>');
+	emptyRow.append(this._createStepCellFrom('','buy_column'));
+	emptyRow.append(this._createStepCellFrom());
+	emptyRow.append(this._createStepCellFrom('', 'sell_column'));
+	return emptyRow;
 };
 
 PricingLadderRenderer.prototype._createStepRowFrom = function(step, isAskStep){

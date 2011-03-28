@@ -29,7 +29,7 @@ var pollUrl = baseUrl + "longPoll/";
 var pricingLadderWidget = new PricingLadderWidget(new PricingLadderRenderer());
 var priceChartWidget = new PriceChartWidget(new PriceChart("#price-chart-container"));
 
-var pricingUrlTemplate = new Url(pollUrl+"?orderBookId={0}");
+var pricingUrlTemplate = new Url(pollUrl + '?init=true');
 var pricingAjaxWrapper = new AjaxWrapper();
 var pricingDataParser = new PricingDataParser();
 var priceWidgets =  new PriceWidgets($([pricingLadderWidget, priceChartWidget]));

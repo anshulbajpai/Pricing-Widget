@@ -26,18 +26,25 @@ PriceWidgetController.prototype.reset = function() {
 }
 
 PriceWidgetController.prototype._getResponse = function(){
-	this.ajaxWrapper.sendContinousRequest(this.urlTemplate.format(this.instrumentId), this._successCallback, this);
+	this.ajaxWrapper.sendContinousRequest(this.urlTemplate, this._successCallback, this);
 };
 
 PriceWidgetController.prototype._successCallback = function(response){	
 	var trimmedText = response.trim();
 	if (trimmedText.length > 0)
 	{
-		var instrumentIdFromResponse = trimmedText.split('|')[0];
-		if(this.instrumentId == instrumentIdFromResponse){
-			var currentPricingModel = this.pricingDataParser.createPricingModelFrom(trimmedText);
-			this.priceDataContainer.add(currentPricingModel);				
-		}	
+		var instrumentResponse =  this._getInstrumentResponse(trimmedText);
+		var currentPricingModel = this.pricingDataParser.createPricingModelFrom(instrumentResponse);
+		this.priceDataContainer.add(currentPricingModel);
 	}	
+};
+
+PriceWidgetController.prototype._getInstrumentResponse = function(response){	
+	var allInstruments = response.split('\n');
+	for(var i=0; i < allInstruments.length; i++){
+		if(allInstruments[i].split('|')[0] == this.instrumentId){
+			return allInstruments[i];			
+		}
+	}
 };
 

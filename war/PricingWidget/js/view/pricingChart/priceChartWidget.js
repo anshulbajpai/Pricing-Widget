@@ -17,6 +17,8 @@ PriceChartWidget.prototype.update = function(pricingModel) {
 	for(var j =0; j < bidData.length; j++){
 		this._updateGraphData(bidData[j], bidMaxQuantity, i+j, false);
 	}
+	this._getChart().show();
+	this._updatePriceChartTitle(pricingModel.title);
 	this.priceChart.clearChart();
 	this.priceChart.drawChart();
 	this.count++;
@@ -25,6 +27,7 @@ PriceChartWidget.prototype.update = function(pricingModel) {
 PriceChartWidget.prototype.reset = function(){
 	this.count = 0;
 	this.priceChart.reset();
+	this._getChart().hide();
 };
 
 PriceChartWidget.prototype._getMaxQuantityFor = function(dataArray) {
@@ -45,4 +48,12 @@ PriceChartWidget.prototype._updateGraphData = function(pricePoint, maxQuantity, 
 
 PriceChartWidget.prototype._getColorFactorFor = function(quantity, maxQuantity){
 	return ((quantity/maxQuantity)*0.8) + 0.2;
+};
+
+PriceChartWidget.prototype._getChart = function() {
+	return $('#chart');
+};
+
+PriceChartWidget.prototype._updatePriceChartTitle = function(title){
+	$('#priceChartTitle').text(title);
 };
