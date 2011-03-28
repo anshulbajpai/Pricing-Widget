@@ -131,6 +131,11 @@ function createTableFragment(instruments)
 	{
 		addInstrumentToTable(tableTag, instruments[i], i);
 	}
+	if(instruments.length < 10) {
+		for(var i = instruments.length; i < 10; i++){
+			addEmptyRowToInstrumentTable(tableTag, i);
+		}
+	}
 	return fragment;
 }
 
@@ -244,4 +249,18 @@ function getInstrumentHoverClass(){
 
 function getInstrumentClickClass(){
 	return 'selected_instrument';
+}
+
+function addEmptyRowToInstrumentTable(tableTag, rowIndex) {
+	var rowTag = document.createElement("tr");
+	rowTag.setAttribute("class", (0 == rowIndex % 2) ? "even_row" : "odd_row");
+	tableTag.appendChild(rowTag);
+
+	var instrumentNameCell = document.createElement("td");
+	instrumentNameCell.setAttribute("class", "instrument_column");
+	rowTag.appendChild(instrumentNameCell);
+	
+	var spreadCell = document.createElement("td");
+	spreadCell.setAttribute("class", "spread_column");
+	rowTag.appendChild(spreadCell);
 }

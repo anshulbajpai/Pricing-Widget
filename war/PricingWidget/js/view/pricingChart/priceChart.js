@@ -6,7 +6,7 @@ var PriceChart = function (containerId) {
 PriceChart.prototype.MAX_SERIES = 69;
 PriceChart.prototype.PRICE_CHART_WIDTH = 210; //in pixels
 PriceChart.prototype.PRICE_CHART_TICK_WIDTH = 43; //in pixels
-PriceChart.prototype.PRICE_CHART_HEIGHT = 238; //in pixels
+PriceChart.prototype.PRICE_CHART_HEIGHT = 240; //in pixels
 PriceChart.prototype.POINT_HEIGHT = 3; //in pixels
 PriceChart.prototype.LABEL_WIDTH = 3; //in pixels
 
