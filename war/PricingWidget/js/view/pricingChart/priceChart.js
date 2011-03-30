@@ -56,7 +56,8 @@ PriceChart.prototype._getYAxisBounds = function(lastSeriesData, yaxisOptions){
     var gap = askGap > bidGap ?  askGap : bidGap;
     var maxY = averageBestPrice + gap;
     var minY = averageBestPrice - gap;
-    return {maxY : maxY, minY : minY}
+    var totalScale = ((maxY - minY)/15 * 100);
+    return {maxY : averageBestPrice + totalScale/2, minY : averageBestPrice - totalScale/2}
 };
 
 PriceChart.prototype._getAverageOverBestPrice = function(series){

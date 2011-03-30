@@ -19,13 +19,14 @@ body
 	float: left;
 	border: solid 0px #000;
 	clear:none;
-	padding-right:10px;
+	/*padding-right:10px;*/
 }
 
 .ladder{
 	float: left;
 	border: solid 0px #000;
 	clear:none;
+	
 }
 
 .price-chart{
@@ -40,7 +41,7 @@ body
 .price-chart-container{
 	float: left;
 	clear:none;
-	width : 279px!important;
+	width : 269px!important;
 	height : 240px;
 	/*margin-top:-6px;*/
 	position:relative;
@@ -60,15 +61,16 @@ body
 .ladderContainer
 {
 	float: left;
-	margin-left : 10px;
+	margin-left : 11px;
 	border: solid 0px #000;
 	clear:none;
 	margin-right:0px;
 	padding-right:0px;
+	width: 200px;
 }
 .data table
 {
-	width: 172px;
+	width: 192px;
 	border-collapse: collapse;
 }
 
@@ -91,7 +93,7 @@ body
     padding:3px 5px;
     text-align: left;
     vertical-align: bottom;
-	width:162px;
+	width:182px;
 	height: 17px;
 }
 
@@ -103,6 +105,7 @@ td {
     vertical-align: middle;
     white-space: nowrap;
     border-right: 1px solid #8f8882;
+    font-size:12px;
 }
 
 .table_header
@@ -221,7 +224,7 @@ td {
 
 .pricingLadder table{
 	border: 0px solid #000;
-	width : 197px;
+	width : 200px;
 	border-collapse: collapse;
 }
 .pricingLadder table .best_price_row td
@@ -247,6 +250,7 @@ td {
 	width:38px;
 	text-align:left;
 	height:10px;
+	font-size:12px;
 }
 
 .line {
@@ -306,7 +310,8 @@ td {
 .container {
 	height: 288px; 
 	width: 682px;
-	padding:0px 0px 0px 10px;
+	padding:0px 0px 0px 0px;
+	
 }
 
 .log_container {
@@ -317,9 +322,9 @@ td {
 }
 
 .chart {
-	width:279px;
+	width:269px;
 	padding:0px; 
-	margin:0px;
+	margin:0px 0px 0px 10px;
 	float:left;
 	display:none;
 }
