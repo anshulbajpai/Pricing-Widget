@@ -147,6 +147,30 @@ td {
 	border-right:0px solid #000;
 }
 
+.buy_column
+{
+	text-align: left;
+}
+
+.price_column
+{
+	padding : 0px 10px 0px 10px;
+	text-align: right;
+	width:100px!important;
+}
+
+.up {
+	 background-image: url(../images/arrow-up.png);
+     background-position: 1px 50%;
+     background-repeat: no-repeat;
+}
+
+.down {
+	 background-image: url(../images/arrow-down.png);
+     background-position: 1px 50%;
+     background-repeat: no-repeat;
+}
+
 .buy_column, .sell_column 
 {
 	color: #000;
@@ -197,7 +221,7 @@ td {
 
 .pricingLadder table{
 	border: 0px solid #000;
-	width : 178px;
+	width : 197px;
 	border-collapse: collapse;
 }
 .pricingLadder table .best_price_row td
@@ -279,4 +303,24 @@ td {
     background-color: #FFF080;
 }
 
+.container {
+	height: 288px; 
+	width: 682px;
+	padding:0px 0px 0px 10px;
+}
+
+.log_container {
+	width: 1000px; 
+	margin: auto; 
+	float:left; 
+	padding: 20px 0px 0px 10px;
+}
+
+.chart {
+	width:279px;
+	padding:0px; 
+	margin:0px;
+	float:left;
+	display:none;
+}
 

@@ -13,5 +13,11 @@ PriceData.prototype.hasHigherPriceThan = function(otherPriceData){
 };
 
 PriceData.prototype.determinePriceChange = function(otherPriceData){
-	this.priceChanged = this.price != otherPriceData.price;
+	if(otherPriceData.price) {
+		this.priceChanged = this.price != otherPriceData.price;
+		if(this.priceChanged) {
+			this.priceIncreased = (this.price > otherPriceData.price);
+		}
+	}
 };
+
