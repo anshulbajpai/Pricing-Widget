@@ -16,7 +16,7 @@ PricingDataParser.prototype._createTradeDataFrom = function(tradeDataResponse, i
 	var tradeData = isBidStep ? new BidData() : new AskData();
 	$(splittedTradeDataResponse).each(function(index, eachInstrumentResponse){
 		var priceData = eachInstrumentResponse.split('@');
-		tradeData.add(new PriceData(parseInt(priceData[0]),parseFloat(priceData[1])));		
+		tradeData.add(new PriceData(parseInt(priceData[0]),priceData[1]));		
 	});
 	return tradeData;
 };

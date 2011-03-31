@@ -20,7 +20,7 @@ PriceChartWidget.prototype.update = function(pricingModel) {
 	this._getChart().show();
 	this._updatePriceChartTitle(pricingModel.title);
 	this.priceChart.clearChart();
-	this.priceChart.drawChart();
+	this.priceChart.drawChart(this._getTickDecimals(askData[0].price));
 	this.count++;
 };
 	
@@ -43,7 +43,7 @@ PriceChartWidget.prototype._getMaxQuantityFor = function(dataArray) {
 
 PriceChartWidget.prototype._updateGraphData = function(pricePoint, maxQuantity, pointId, isAskPoint) {
 	var maxSeries = this.priceChart.MAX_SERIES;
-	this.priceChart.setDataPoint(this.count%maxSeries, pointId, [this.count%maxSeries, pricePoint.price, this._getColorFactorFor(pricePoint.quantity, maxQuantity), isAskPoint]);
+	this.priceChart.setDataPoint(this.count%maxSeries, pointId, [this.count%maxSeries, pricePoint.getPriceAsFloat(), this._getColorFactorFor(pricePoint.quantity, maxQuantity), isAskPoint]);
 };
 
 PriceChartWidget.prototype._getColorFactorFor = function(quantity, maxQuantity){
@@ -56,4 +56,10 @@ PriceChartWidget.prototype._getChart = function() {
 
 PriceChartWidget.prototype._updatePriceChartTitle = function(title){
 	$('#priceChartTitle').text(title);
+};
+
+PriceChartWidget.prototype._getTickDecimals = function(maxPrice){
+	var dot = maxPrice !== null ? maxPrice.indexOf('.') : -1;
+	var fixedPointPrecision = dot != -1 ? (maxPrice.length - dot - 1) : 0;
+	return fixedPointPrecision;
 };

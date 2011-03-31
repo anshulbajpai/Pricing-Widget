@@ -18,14 +18,14 @@ PriceChart.prototype._createFreshPriceChartViewModel = function(){
 	return new PriceChartViewModel(this.MAX_SERIES);
 };
 
-PriceChart.prototype.drawChart = function() {
+PriceChart.prototype.drawChart = function(tickDecimals) {
 	var data = this.data.getData();
 	var priceBound = data.priceBound;
 	
 	var yaxisOptions = {min : priceBound.minPrice, max : priceBound.maxPrice};	
-	var yaxisBounds = this._getYAxisBounds(data.dataPoints[data.dataPoints.length -1], yaxisOptions);
+	var yaxisBounds = this._getYAxisBounds(data.dataPoints[data.dataPoints.length -1]);
 	
-	var ticks = this._prepareTicks(yaxisBounds);
+	var ticks = this._prepareTicks(yaxisBounds, tickDecimals);
 	
 	var chartGraphContainer = this._createDivElement("price-chart", "price-chart");
 	var tickLabelsContainer = this._createDivElement("price-chart-ticks", "price-chart-ticks");
@@ -37,7 +37,7 @@ PriceChart.prototype.drawChart = function() {
 	for (var i = 0; i < data.dataPoints.length; i++) {
         series = data.dataPoints[i];
         for (var j = 0; j < series.length; j++) {                    	
-            this._drawpoint(series, series[j], series.color, data.dataPoints.length, yaxisBounds);
+            this._drawPoint(series[j], series.color, data.dataPoints.length, yaxisBounds);
         }
     }
 };
@@ -46,18 +46,12 @@ PriceChart.prototype.clearChart = function() {
 	$(this.containerId).html("");
 };
 
-
-PriceChart.prototype._getYAxisBounds = function(lastSeriesData, yaxisOptions){
-    var averageBestPrice = this._getAverageOverBestPrice(lastSeriesData);
-    var allSeriesMinPrice = yaxisOptions.min
-    var allSeriesMaxPrice = yaxisOptions.max;  
-    var bidGap = averageBestPrice - allSeriesMinPrice;
-    var askGap = allSeriesMaxPrice - averageBestPrice;
-    var gap = askGap > bidGap ?  askGap : bidGap;
-    var maxY = averageBestPrice + gap;
-    var minY = averageBestPrice - gap;
-    var totalScale = ((maxY - minY)/15 * 100);
-    return {maxY : averageBestPrice + totalScale/2, minY : averageBestPrice - totalScale/2}
+PriceChart.prototype._getYAxisBounds = function(lastSeriesData){
+	var averageBestPrice = this._getAverageOverBestPrice(lastSeriesData);
+	var maxY = lastSeriesData[0][1];
+	var minY = lastSeriesData[lastSeriesData.length-1][1];
+	var totalScale = ((maxY - minY)/15 * 100);
+	return {maxY : averageBestPrice + totalScale/2, minY : averageBestPrice - totalScale/2}
 };
 
 PriceChart.prototype._getAverageOverBestPrice = function(series){
@@ -70,7 +64,7 @@ PriceChart.prototype._getAverageOverBestPrice = function(series){
     }
 };
 
-PriceChart.prototype._drawpoint = function(series, data, color, noOfSeries, yaxisBounds) {
+PriceChart.prototype._drawPoint = function(data, color, noOfSeries, yaxisBounds) {
 	var priceChartWidthPx = this._getPriceChart().css("width");
 	var priceChartWidth = this._getPixcelNumber(priceChartWidthPx);
     var x,y;
@@ -100,9 +94,8 @@ PriceChart.prototype._getYCoordinateFrom = function(price, yaxisBounds){
 	return priceChartHeight - (priceChartHeight*((price - yaxisBounds.minY)/(yaxisBounds.maxY- yaxisBounds.minY)));
 };
 
-PriceChart.prototype._prepareTicks = function(yaxisBounds){
+PriceChart.prototype._prepareTicks = function(yaxisBounds, tickDecimals){
 	var ticks = [];
-	var tickDecimals = 5;
 	var gap = yaxisBounds.maxY - yaxisBounds.minY;
 	var noOfTicks = 10;
 	var labelAvg = gap/noOfTicks;

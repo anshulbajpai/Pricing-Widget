@@ -5,19 +5,25 @@ var PriceData = function(quantity, price){
 };
 
 PriceData.prototype.hasLowerPriceThan = function(otherPriceData){
-	return this.price <= otherPriceData.price;
+	return this.getPriceAsFloat() <= otherPriceData.getPriceAsFloat();
 };
 
 PriceData.prototype.hasHigherPriceThan = function(otherPriceData){
-	return this.price >= otherPriceData.price;
+	return this.getPriceAsFloat() >= otherPriceData.getPriceAsFloat();
 };
 
 PriceData.prototype.determinePriceChange = function(otherPriceData){
-	if(otherPriceData.price) {
-		this.priceChanged = this.price != otherPriceData.price;
+	otherPrice = otherPriceData.getPriceAsFloat();
+	currentPrice = this.getPriceAsFloat();
+	if(otherPrice) {
+		this.priceChanged = currentPrice != otherPrice;
 		if(this.priceChanged) {
-			this.priceIncreased = (this.price > otherPriceData.price);
+			this.priceIncreased = (currentPrice > otherPrice);
 		}
 	}
+};
+
+PriceData.prototype.getPriceAsFloat = function() {
+	return parseFloat(this.price);
 };
 
