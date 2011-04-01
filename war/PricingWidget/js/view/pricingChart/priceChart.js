@@ -1,6 +1,7 @@
 var PriceChart = function (containerId) {
     this.data = this._createFreshPriceChartViewModel();
     this.containerId = containerId;
+    this.chartRendered = false;
 };
 
 PriceChart.prototype.MAX_SERIES = 69;
@@ -11,7 +12,7 @@ PriceChart.prototype.setDataPoint = function(seriesNumber, pointId, dataPoint) {
 	
 PriceChart.prototype.reset = function(){
 	this.data = this._createFreshPriceChartViewModel();
-	$(this.containerId).text('');
+	this.clearChart();
 };
 
 PriceChart.prototype._createFreshPriceChartViewModel = function(){
@@ -20,46 +21,49 @@ PriceChart.prototype._createFreshPriceChartViewModel = function(){
 
 PriceChart.prototype.drawChart = function(tickDecimals) {
 	var data = this.data.getData();
-	var priceBound = data.priceBound;
-	
-	var yaxisOptions = {min : priceBound.minPrice, max : priceBound.maxPrice};	
-	var yaxisBounds = this._getYAxisBounds(data.dataPoints[data.dataPoints.length -1]);
+	var yaxisBounds = this._getYaxisBounds(data.dataPoints[data.dataPoints.length -1]);
 	
 	var ticks = this._prepareTicks(yaxisBounds, tickDecimals);
 	
-	var chartGraphContainer = this._createDivElement("price-chart", "price-chart");
-	var tickLabelsContainer = this._createDivElement("price-chart-ticks", "price-chart-ticks");
-	$(this.containerId).append(chartGraphContainer);
-	$(this.containerId).append(tickLabelsContainer);
+	if(!this.chartRendered) {
+		var chartGraphContainer = this._createDivElement("price-chart", "price-chart");
+		var tickLabelsContainer = this._createDivElement("price-chart-ticks", "price-chart-ticks");
+		$(this.containerId).append(chartGraphContainer);
+		$(this.containerId).append(tickLabelsContainer);
+	}
 	
-	this._insertTicks(ticks, yaxisOptions, yaxisBounds);
+	this._insertTicks(ticks, yaxisBounds);
 	
 	for (var i = 0; i < data.dataPoints.length; i++) {
         series = data.dataPoints[i];
-        for (var j = 0; j < series.length; j++) {                    	
-            this._drawPoint(series[j], series.color, data.dataPoints.length, yaxisBounds);
+        for (var j = 0; j < series.length; j++) {   
+        	var price = series[j][1];
+        	if(yaxisBounds.minY <= price && price <= yaxisBounds.maxY) {
+        		this._drawPoint(series[j], series.color, data.dataPoints.length, yaxisBounds);
+        	}
         }
     }
+	this.chartRendered = true;
 };
 
 PriceChart.prototype.clearChart = function() {
-	$(this.containerId).html("");
+	$('.point').remove();
 };
 
-PriceChart.prototype._getYAxisBounds = function(lastSeriesData){
-	var averageBestPrice = this._getAverageOverBestPrice(lastSeriesData);
-	var maxY = lastSeriesData[0][1];
-	var minY = lastSeriesData[lastSeriesData.length-1][1];
-	var totalScale = ((maxY - minY)/15 * 100);
+PriceChart.prototype._getYaxisBounds = function(lastSeriesData){
+	var bestPrices = this._getBestPrices(lastSeriesData);
+	var spread = bestPrices.bestAskPrice - bestPrices.bestBidPrice;
+	var averageBestPrice = (bestPrices.bestAskPrice + bestPrices.bestBidPrice)/2;
+	var totalScale = ((spread)/10 * 100);
 	return {maxY : averageBestPrice + totalScale/2, minY : averageBestPrice - totalScale/2}
 };
 
-PriceChart.prototype._getAverageOverBestPrice = function(series){
+PriceChart.prototype._getBestPrices = function(series){
     for(var i = 0; i < series.length; i++){
     	if(series[i][3] == false){
     		var bestBidPrice = series[i][1];
     		var bestAskPrice = series[i-1][1];
-    		return ( bestAskPrice +  bestBidPrice)/2
+    		return {bestAskPrice: bestAskPrice, bestBidPrice: bestBidPrice}; 
     	}
     }
 };
@@ -107,22 +111,29 @@ PriceChart.prototype._prepareTicks = function(yaxisBounds, tickDecimals){
 	return ticks;
 };
 
-PriceChart.prototype._insertTicks = function(ticks, yaxisOptions, yaxisBounds){
+PriceChart.prototype._insertTicks = function(ticks, yaxisBounds){
 	var priceChartWidthPx = this._getPriceChart().css("width");
 	var priceChartWidth = this._getPixcelNumber(priceChartWidthPx);
 	for (var i = 0; i < ticks.length; ++i) {
         var tick = ticks[i];
         var y = this._getYCoordinateFrom(tick.value, yaxisBounds);
-        this._drawTickLabel(tick.label, y-5);
-        this._drawLine(y, priceChartWidth);
+        this._drawTickLabel(tick.label, y-5, i);
+        if(!this.chartRendered) {
+        	this._drawLine(y, priceChartWidth);
+        }
     }
 };
 
-PriceChart.prototype._drawTickLabel = function(label, y){
-	var tickLabel = document.createElement('div');
-	$(tickLabel).addClass("tick-label");
-	$(tickLabel).css("top", y + "px");
-	$(tickLabel).text(label);
+PriceChart.prototype._drawTickLabel = function(label, y, index){
+	if(!this.chartRendered) {
+		var tickLabel = document.createElement('div');
+		$(tickLabel).attr("id", "tickLabel" + index);
+		$(tickLabel).addClass("tick-label");
+		$(tickLabel).css("top", y + "px");
+		$(tickLabel).text(label);
+	} else {
+		$("#tickLabel" + index).text(label);
+	}
 	$("#price-chart-ticks").append(tickLabel);
 };
 
