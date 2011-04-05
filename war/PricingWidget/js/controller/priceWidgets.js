@@ -3,13 +3,13 @@ var PriceWidgets = function(priceWidgets){
 };
 
 PriceWidgets.prototype.reset = function(){
-	this.priceWidgets.each(function(index, priceWidget){
-		priceWidget.reset();
-	});
+	for(var i = 0; i < this.priceWidgets.length; i++) {
+		this.priceWidgets[i].reset();
+	}
 };
 
 PriceWidgets.prototype.update = function(pricingModel){	
-	this.priceWidgets.each(function(index, priceWidget){
-		priceWidget.update(pricingModel);
-	});
+	for(var i = 0; i < this.priceWidgets.length; i++) {
+		this.priceWidgets[i].update(pricingModel);
+	}
 };

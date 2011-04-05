@@ -77,9 +77,10 @@ PricingLadderRenderer.prototype._createBidStepsFrom = function(steps, tableBody)
 };
 
 PricingLadderRenderer.prototype._decorateLadderSteps = function(pricingLadderRows){
-	pricingLadderRows.each(function(index, eachRow){
-		$(eachRow).addClass(index%2 == 0 ? 'even_row' : 'odd_row');
-	});
+	for(var i = 0; i < pricingLadderRows.length; i++) {
+		var eachRow = pricingLadderRows[i];
+		$(eachRow).addClass(i%2 == 0 ? 'even_row' : 'odd_row');
+	}
 };
 
 PricingLadderRenderer.prototype._createHeader = function(step){
@@ -100,10 +101,11 @@ PricingLadderRenderer.prototype._createHeaderCell = function(value){
 
 PricingLadderRenderer.prototype._createStepsFrom = function(steps, isAskSteps, tableBody){
 	var that = this;
-	steps.each(function(index, step){
+	for(var i = 0; i < steps.length; i++) {
+		var step = steps[i];
 		var stepRow = that._createStepRowFrom(step, isAskSteps);
 		tableBody.append(stepRow);
-	});
+	}
 };
 
 PricingLadderRenderer.prototype._addEmptyStepRows = function(noOfRows, tableBody){
