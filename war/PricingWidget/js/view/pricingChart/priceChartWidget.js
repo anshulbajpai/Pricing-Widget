@@ -19,7 +19,6 @@ PriceChartWidget.prototype.update = function(pricingModel) {
 	}
 	this._getChart().show();
 	this._updatePriceChartTitle(pricingModel.title);
-	this.priceChart.clearChart();
 	this.priceChart.drawChart(this._getTickDecimals(askData[0].price));
 	this.count++;
 };

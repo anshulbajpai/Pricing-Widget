@@ -14,7 +14,6 @@ PriceChart.prototype.setDataPoint = function(seriesNumber, pointId, dataPoint) {
 	
 PriceChart.prototype.reset = function(){
 	this.data = this._createFreshPriceChartViewModel();
-	this.clearChart();
 };
 
 PriceChart.prototype._createFreshPriceChartViewModel = function(){
@@ -23,27 +22,17 @@ PriceChart.prototype._createFreshPriceChartViewModel = function(){
 
 PriceChart.prototype.drawChart = function(tickDecimals) {
 	var chartFragment = document.createDocumentFragment();
+	var chartDivTag = document.createElement('div');
+	chartFragment.appendChild(chartDivTag);
 	var data = this.data.getData();
 	var yaxisBounds = this._getYaxisBounds(data.dataPoints[data.dataPoints.length -1]);
 	
 	var ticks = this._prepareTicks(yaxisBounds, tickDecimals);
-	this._insertTicks(ticks, yaxisBounds, chartFragment);
-	
-	for (var i = 0; i < data.dataPoints.length; i++) {
-        series = data.dataPoints[i];
-        for (var j = 0; j < series.length; j++) {   
-        	var price = series[j][1];
-        	if(yaxisBounds.minY <= price && price <= yaxisBounds.maxY) {
-        		this._drawPoint(series[j], series.color, data.dataPoints.length, yaxisBounds, chartFragment);
-        	}
-        }
-    }
-	this._getPriceChart().append(chartFragment);
-	this.chartRendered = true;
-};
+	this._insertTicks(ticks, yaxisBounds, chartDivTag);
+	this._drawPoints(data.dataPoints, yaxisBounds, chartDivTag);
 
-PriceChart.prototype.clearChart = function() {
-	$('div.point', "#price-chart").remove();
+	this._getPriceChart().replaceChild(chartFragment, this._getPriceChart().firstChild);
+	this.chartRendered = true;
 };
 
 PriceChart.prototype._getYaxisBounds = function(lastSeriesData){
@@ -64,14 +53,14 @@ PriceChart.prototype._getBestPrices = function(series){
     }
 };
 
-PriceChart.prototype._drawPoint = function(data, color, noOfSeries, yaxisBounds, chartFragment) {
-	var priceChartWidth = this._getPriceChart().width();
+PriceChart.prototype._drawPoint = function(data, color, noOfSeries, yaxisBounds, chartDivTag) {
+	var priceChartWidth = $(this._getPriceChart()).width();
     var x,y;
     var xCoord = priceChartWidth - ((noOfSeries - data[0])*3) ;
     x = xCoord;
     y = this._getYCoordinateFrom(data[1], yaxisBounds) - 1.5;
     var point = this._createPoint(x, y, data[2], color, data[3]);
-    chartFragment.appendChild(point);
+    chartDivTag.appendChild(point);
 };
 
 PriceChart.prototype._createPoint = function(x, y, alpha, color, isAskPoint) {
@@ -83,7 +72,7 @@ PriceChart.prototype._createPoint = function(x, y, alpha, color, isAskPoint) {
 };
 
 PriceChart.prototype._getYCoordinateFrom = function(price, yaxisBounds){
-	var priceChartHeight = this._getPriceChart().height();
+	var priceChartHeight = $(this._getPriceChart()).height();
 	return priceChartHeight - (priceChartHeight*((price - yaxisBounds.minY)/(yaxisBounds.maxY- yaxisBounds.minY)));
 };
 
@@ -100,48 +89,56 @@ PriceChart.prototype._prepareTicks = function(yaxisBounds, tickDecimals){
 	return ticks;
 };
 
-PriceChart.prototype._insertTicks = function(ticks, yaxisBounds, chartFragment){
-	var priceChartWidth = this._getPriceChart().width();
+PriceChart.prototype._insertTicks = function(ticks, yaxisBounds, chartDivTag){
+	var priceChartWidth = $(this._getPriceChart()).width();
 	var chartTicksFragment = document.createDocumentFragment();
+	var chartTicksDivTag = document.createElement("div");
+	chartTicksFragment.appendChild(chartTicksDivTag);
 	for (var i = 0; i < ticks.length; ++i) {
         var tick = ticks[i];
         var y = this._getYCoordinateFrom(tick.value, yaxisBounds);
-        this._drawTickLabel(tick.label, y-5, i, chartTicksFragment);
-        if(!this.chartRendered) {
-        	this._drawLine(y, priceChartWidth, chartFragment);
-        }
+        this._drawTickLabel(tick.label, y-5, i, chartTicksDivTag);
+        this._drawLine(y, priceChartWidth, chartDivTag);
     }
-	this._getPriceChartTicks().append(chartTicksFragment);
+	this._getPriceChartTicks().replaceChild(chartTicksFragment, this._getPriceChartTicks().firstChild);
 };
 
-PriceChart.prototype._drawTickLabel = function(label, y, index, chartTicksFragment){
-	if(!this.chartRendered) {
-		var tickLabel = document.createElement("div");
-		$(tickLabel).attr("id", "tickLabel" + index).addClass("tick-label").css("top", y + "px").text(label);
-		chartTicksFragment.appendChild(tickLabel);
-	} else {
-		$("#tickLabel" + index).text(label);
-	}
+PriceChart.prototype._drawTickLabel = function(label, y, index, chartTicksDivTag){
+	var tickLabel = document.createElement("div");
+	$(tickLabel).attr("id", "tickLabel" + index).addClass("tick-label").css("top", y + "px").text(label);
+	chartTicksDivTag.appendChild(tickLabel);
 };
 
-PriceChart.prototype._drawLine = function(y, lineWidth, chartFragment){
+PriceChart.prototype._drawLine = function(y, lineWidth, chartDivTag){
 	var line = document.createElement("div");
 	$(line).addClass("line").css("top", y + "px").css("width", lineWidth + "px");
-	chartFragment.appendChild(line);
+	chartDivTag.appendChild(line);
 };
 
 PriceChart.prototype._getPriceChart = function() {
 	if(!this.priceChart) {
-		this.priceChart = $("#price-chart");
+		this.priceChart = document.getElementById("price-chart");
 	}
 	return this.priceChart;
 };
 
 PriceChart.prototype._getPriceChartTicks = function() {
 	if(!this.priceChartTicks) {
-		this.priceChartTicks = $("#price-chart-ticks");
+		this.priceChartTicks = document.getElementById("price-chart-ticks");
 	}
 	return this.priceChartTicks;
+};
+
+PriceChart.prototype._drawPoints = function (dataPoints, yaxisBounds, chartDivTag) {
+	for (var i = 0; i < dataPoints.length; i++) {
+        series = dataPoints[i];
+        for (var j = 0; j < series.length; j++) {   
+        	var price = series[j][1];
+        	if(yaxisBounds.minY <= price && price <= yaxisBounds.maxY) {
+        		this._drawPoint(series[j], series.color, dataPoints.length, yaxisBounds, chartDivTag);
+        	}
+        }
+    }
 };
 
 
