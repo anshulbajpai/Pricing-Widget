@@ -32,9 +32,10 @@ var priceChartWidget = new PriceChartWidget(new PriceChart("#price-chart-contain
 var pricingUrlTemplate = new Url(pollUrl + '?init=true');
 var pricingAjaxWrapper = new AjaxWrapper();
 var pricingDataParser = new PricingDataParser();
+var instrumentParser = new InstrumentParser();
 var priceWidgets =  new PriceWidgets($([pricingLadderWidget, priceChartWidget]));
 
-var priceWidgetController = new PriceWidgetController(pricingUrlTemplate, pricingAjaxWrapper, pricingDataParser, priceWidgets);
+var priceWidgetController = new PriceWidgetController(pricingUrlTemplate, pricingAjaxWrapper, pricingDataParser, instrumentParser, priceWidgets);
 
 var selectedInstrument = null;
 
@@ -52,7 +53,7 @@ function longPollCallback()
 		var trimmedText = xhr.responseText.trim();
 		if (trimmedText.length > 0)
 		{
-			processResponseData(trimmedText);
+			priceWidgetController.updateInstrumentTable(trimmedText);
 		}
 	}
 	else
@@ -76,16 +77,16 @@ function longPollCallback()
 	{
 		clearTimeout(sendCallbackTimerId);
 	}
-	sendCallbackTimerId = setTimeout(sendLongPoll, 100);
+	//sendCallbackTimerId = setTimeout(sendLongPoll, 100);
 }
 
-function sendLongPoll()
-{
-	xhr = createXmlHttpRequest();
-	xhr.open("GET", '../priceWidget?url=' + pollUrl + xhrCounter++, true);
-	xhr.onreadystatechange = longPollCallback;
-	xhr.send("");
-}
+//function sendLongPoll()
+//{
+//	xhr = createXmlHttpRequest();
+//	xhr.open("GET", '../priceWidget?url=' + pollUrl + xhrCounter++, true);
+//	xhr.onreadystatechange = longPollCallback;
+//	xhr.send("");
+//}
 
 function startWidget()
 {
@@ -139,7 +140,7 @@ function createTableFragment(instruments)
 	return fragment;
 }
 
-function Instrument(data)
+function Instrument1(data)
 {
 	var dataItems = data.split("|");
 	this.orderBookId = dataItems[0];
@@ -175,7 +176,7 @@ function parseInstruments(responseData)
 	var dataLines = responseData.split("\n");
 	for (var i = 0, size = dataLines.length; i < size; i++)
 	{
-		instruments[i] = new Instrument(dataLines[i]);
+		instruments[i] = new Instrument1(dataLines[i]);
 	}
 	return instruments;
 }
