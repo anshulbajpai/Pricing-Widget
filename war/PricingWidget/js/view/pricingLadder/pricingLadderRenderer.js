@@ -86,16 +86,16 @@ PricingLadderRenderer.prototype._decorateLadderSteps = function(pricingLadderRow
 PricingLadderRenderer.prototype._createHeader = function(step){
 	var headerRow = $('<tr>');
 	var header =  $('<thead>').append(headerRow);
-	headerRow.append(this._createHeaderCell('Bid Qty'));
-	headerRow.append(this._createHeaderCell('Price'));
-	headerRow.append(this._createHeaderCell('Ask Qty'));
+	headerRow.append(this._createHeaderCell('Bid Qty'))
+			 .append(this._createHeaderCell('Price'))
+			 .append(this._createHeaderCell('Ask Qty'));
 	return header;
 };
 
 PricingLadderRenderer.prototype._createHeaderCell = function(value){
 	var headerCell = $('<td>');
-	headerCell.addClass("table_header");
-	headerCell.append(document.createTextNode(value))
+	headerCell.addClass("table_header")
+			  .append(document.createTextNode(value))
 	return headerCell;
 };
 
@@ -153,8 +153,7 @@ PricingLadderRenderer.prototype._createStepRowFrom = function(step, isAskStep){
 
 PricingLadderRenderer.prototype._createStepCellFrom = function(value, className){
 	var stepCell = $('<td>');
-	stepCell.addClass(className);
-	stepCell.append(document.createTextNode(value));
+	stepCell.addClass(className).append(document.createTextNode(value));
 	return stepCell;
 };
 
@@ -165,5 +164,5 @@ PricingLadderRenderer.prototype.reset = function(){
 };
 
 PricingLadderRenderer.prototype._getPricingLadder = function(){
-	return $('.pricingLadder');
+	return $('#pricingLadder');
 };

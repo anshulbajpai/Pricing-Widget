@@ -36,7 +36,7 @@ PriceWidgetController.prototype._successCallback = function(response){
 		var instrumentResponse =  this._getInstrumentResponse(trimmedText);
 		var currentPricingModel = this.pricingDataParser.createPricingModelFrom(instrumentResponse);
 		this.priceDataContainer.add(currentPricingModel);
-	}	
+	}
 };
 
 PriceWidgetController.prototype._getInstrumentResponse = function(response){	
