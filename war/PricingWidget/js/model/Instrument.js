@@ -6,23 +6,22 @@ var Instrument = function(data){
 	if(this.status == "Closed")
 		this.spread = "NA";
 	else{
-		var spread = this._calculateSpread(this._parseTradeData(dataItems[3]), this._parseTradeData(dataItems[4]));
-		this.spread = this._roundToFiveDecimalPlace(spread);
+		this.spread = this._calculateSpread(this._parseTradeData(dataItems[3]), this._parseTradeData(dataItems[4]));
 	}
 };
 
 Instrument.prototype._calculateSpread = function(bidData, askData){	
-	return this._calculatePrice(askData[0]) - this._calculatePrice(bidData[0]);
+	var buyPrice = this._calculatePrice(askData[0]);
+	var sellPrice = this._calculatePrice(bidData[0]);
+    var dot = sellPrice.indexOf('.');
+    this.precision = dot != -1 ? (sellPrice.length - dot - 1) : 0;
+    return (buyPrice - sellPrice).toFixed(this.precision);
 };
 
 Instrument.prototype._parseTradeData = function(data){
 	return data.split(';');
 };
 
-Instrument.prototype._roundToFiveDecimalPlace = function(value){
-	return Math.round(value*Math.pow(10,5))/Math.pow(10,5);
-};
-
 Instrument.prototype._calculatePrice = function(data){
-	return parseFloat(data.split('@')[1]);
+	return data.split('@')[1];
 };

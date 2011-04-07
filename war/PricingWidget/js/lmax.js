@@ -77,16 +77,7 @@ function longPollCallback()
 	{
 		clearTimeout(sendCallbackTimerId);
 	}
-	//sendCallbackTimerId = setTimeout(sendLongPoll, 100);
 }
-
-//function sendLongPoll()
-//{
-//	xhr = createXmlHttpRequest();
-//	xhr.open("GET", '../priceWidget?url=' + pollUrl + xhrCounter++, true);
-//	xhr.onreadystatechange = longPollCallback;
-//	xhr.send("");
-//}
 
 function startWidget()
 {

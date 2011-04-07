@@ -129,8 +129,6 @@ PricingLadderRenderer.prototype._createStepRowFrom = function(step, isAskStep){
 
 		var priceCell = this._createStepCellFrom(step.price, 'price_column');
 		stepRow.append(priceCell);
-		var arrowClass = step.priceChanged ? (step.priceIncreased ? "up" : "down") : "";
-		priceCell.addClass(arrowClass);
 		
 		var quantityCell = this._createStepCellFrom(step.quantity, 'sell_column');
 		stepRow.append(quantityCell);
@@ -142,8 +140,6 @@ PricingLadderRenderer.prototype._createStepRowFrom = function(step, isAskStep){
 		
 		var priceCell = this._createStepCellFrom(step.price, 'price_column');
 		stepRow.append(priceCell);
-		var arrowClass = step.priceChanged ? (step.priceIncreased ? "up" : "down") : "";
-		priceCell.addClass(arrowClass);
 		
 		stepRow.append(this._createStepCellFrom('', 'sell_column'));
 		step.priceChanged && quantityCell.addClass('buy_move');

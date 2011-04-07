@@ -13,6 +13,7 @@ PriceChart.prototype.setDataPoint = function(seriesNumber, pointId, dataPoint) {
 };
 	
 PriceChart.prototype.reset = function(){
+	delete this.data;
 	this.data = this._createFreshPriceChartViewModel();
 };
 
@@ -39,8 +40,16 @@ PriceChart.prototype._getYaxisBounds = function(lastSeriesData){
 	var bestPrices = this._getBestPrices(lastSeriesData);
 	var spread = bestPrices.bestAskPrice - bestPrices.bestBidPrice;
 	var averageBestPrice = (bestPrices.bestAskPrice + bestPrices.bestBidPrice)/2;
-	var totalScale = ((spread)/10 * 100);
-	return {maxY : averageBestPrice + totalScale/2, minY : averageBestPrice - totalScale/2}
+	if(spread > 0) {
+		var totalScale = ((spread)/10 * 100);
+		return {maxY : averageBestPrice + totalScale/2, minY : averageBestPrice - totalScale/2};
+	} 
+	var max = lastSeriesData[0][1];
+	var min = lastSeriesData[lastSeriesData.length-1][1];
+	var maxGap = max - averageBestPrice;
+	var minGap = averageBestPrice - min;
+	var gap = maxGap > minGap ? maxGap: minGap; 
+	return {maxY : averageBestPrice + gap, minY :  averageBestPrice - gap};
 };
 
 PriceChart.prototype._getBestPrices = function(series){

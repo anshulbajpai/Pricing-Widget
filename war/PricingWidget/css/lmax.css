@@ -162,18 +162,6 @@ td {
 	width:100px!important;
 }
 
-.up {
-	 background-image: url(../images/arrow-up.png);
-     background-position: 1px 50%;
-     background-repeat: no-repeat;
-}
-
-.down {
-	 background-image: url(../images/arrow-down.png);
-     background-position: 1px 50%;
-     background-repeat: no-repeat;
-}
-
 .buy_column, .sell_column 
 {
 	color: #000;

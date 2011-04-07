@@ -12,4 +12,5 @@ PriceWidgets.prototype.update = function(pricingModel){
 	for(var i = 0; i < this.priceWidgets.length; i++) {
 		this.priceWidgets[i].update(pricingModel);
 	}
+	delete pricingModel;
 };
