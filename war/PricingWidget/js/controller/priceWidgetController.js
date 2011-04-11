@@ -26,7 +26,7 @@ PriceWidgetController.prototype.reset = function() {
 	this.ajaxWrapper.stopContinousRequest();
 	this.priceDataContainer.reset();
 	this.priceWidgets.reset();
-}
+};
 
 PriceWidgetController.prototype._getResponse = function(){
 	this.ajaxWrapper.sendContinousRequest(this.urlTemplate, this._successCallback, this);
@@ -165,4 +165,4 @@ PriceWidgetController.prototype.handleClickForInstrument = function(instrumentRo
 	else{
 		priceWidgetController.show(this.selectedInstrument.instrumentId);
 	}
-}
+};
