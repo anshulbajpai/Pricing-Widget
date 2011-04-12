@@ -42,7 +42,13 @@ PriceChartWidget.prototype._getMaxQuantityFor = function(dataArray) {
 
 PriceChartWidget.prototype._updateGraphData = function(pricePoint, maxQuantity, pointId, isAskPoint) {
 	var maxSeries = this.priceChart.MAX_SERIES;
-	this.priceChart.setDataPoint(this.count%maxSeries, pointId, [this.count%maxSeries, pricePoint.getPriceAsFloat(), this._getColorFactorFor(pricePoint.quantity, maxQuantity), isAskPoint]);
+	var dataPoint = {seriesNumber: this.count%maxSeries, 
+					 price: pricePoint.price,
+					 colorFactor: this._getColorFactorFor(pricePoint.quantity, maxQuantity),
+					 isAskPoint: isAskPoint
+					};
+	//this.priceChart.setDataPoint(this.count%maxSeries, pointId, [this.count%maxSeries, pricePoint.price, this._getColorFactorFor(pricePoint.quantity, maxQuantity), isAskPoint]);
+	this.priceChart.setDataPoint(this.count%maxSeries, pointId, dataPoint);
 };
 
 PriceChartWidget.prototype._getColorFactorFor = function(quantity, maxQuantity){

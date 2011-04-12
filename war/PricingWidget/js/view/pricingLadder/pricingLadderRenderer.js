@@ -131,19 +131,19 @@ PricingLadderRenderer.prototype._createStepRowFrom = function(step, isAskStep, b
 
 		var priceCell = this._createStepCellFrom(step.price, 'price_column');
 		stepRow.append(priceCell);
-		(step.price <= bestPrice) && priceCell.addClass('greenColor');
 		
 		var quantityCell = this._createStepCellFrom(step.quantity, 'sell_column');
 		stepRow.append(quantityCell);
+		(step.price <= bestPrice) && quantityCell.addClass('greenColor');
 		step.priceChanged && quantityCell.addClass('sell_move');
 	}
-	else{
+	else {
 		var quantityCell = this._createStepCellFrom(step.quantity, 'buy_column');
 		stepRow.append(quantityCell);
+		(step.price >= bestPrice) && quantityCell.addClass('greenColor');
 		
 		var priceCell = this._createStepCellFrom(step.price, 'price_column');
 		stepRow.append(priceCell);
-		(step.price >= bestPrice) && priceCell.addClass('greenColor');
 		
 		stepRow.append(this._createStepCellFrom('', 'sell_column'));
 		step.priceChanged && quantityCell.addClass('buy_move');
