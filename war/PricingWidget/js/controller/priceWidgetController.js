@@ -8,6 +8,7 @@ var PriceWidgetController = function(urlTemplate, ajaxWrapper, pricingDataParser
 	this.priceDataContainer = new PriceDataContainer(this._updateWidgets, this);
 	this.displayDiv = null;
 	this.selectedInstrument = null
+	this.cnt = 0;
 };
 
 PriceWidgetController.prototype._updateWidgets = function(pricingModel){
@@ -29,10 +30,11 @@ PriceWidgetController.prototype.reset = function() {
 };
 
 PriceWidgetController.prototype._getResponse = function(){
-	this.ajaxWrapper.sendContinousRequest(this.urlTemplate, this._successCallback, this);
+	this.ajaxWrapper.sendContinousRequest(this.urlTemplate, function(response){this._successCallback(response, this.cnt++)}, this);
 };
 
-PriceWidgetController.prototype._successCallback = function(response){	
+PriceWidgetController.prototype._successCallback = function(response, counter){
+	console.time('successCallback' + counter);
 	var trimmedText = response.trim();
 	if (trimmedText.length > 0)
 	{
@@ -41,6 +43,7 @@ PriceWidgetController.prototype._successCallback = function(response){
 		this.priceDataContainer.add(currentPricingModel);
 		this.updateInstrumentTable(trimmedText);
 	}
+	console.timeEnd('successCallback'+counter);	
 };
 
 PriceWidgetController.prototype._getInstrumentResponse = function(response){	

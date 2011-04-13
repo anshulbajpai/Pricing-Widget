@@ -18,8 +18,10 @@ PriceChartViewModel.prototype._addSeriesIfNotPresent = function(seriesNumber){
 
 PriceChartViewModel.prototype._shiftSeriesIfFull = function(seriesNumber, pointId){
 	if(pointId == 0 && this._hasMaxSeriesReached()){
+		var firstSeries = this.data[0]; 
 		this.data.shift();
 		this.data.push([]);		
+		delete firstSeries;
 	}
 };
 

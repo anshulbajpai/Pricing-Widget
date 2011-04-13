@@ -29,7 +29,7 @@ var pollUrl = baseUrl + "longPoll/";
 var pricingLadderWidget = new PricingLadderWidget(new PricingLadderRenderer());
 var priceChartWidget = new PriceChartWidget(new PriceChart("#price-chart-container"));
 
-var pricingUrlTemplate = new Url(pollUrl + '?init=true');
+var pricingUrlTemplate = new Url(pollUrl);
 var pricingAjaxWrapper = new AjaxWrapper();
 var pricingDataParser = new PricingDataParser();
 var instrumentParser = new InstrumentParser();

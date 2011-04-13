@@ -3,12 +3,9 @@ var Url = function(url){
 };
 
 Url.prototype.randomize = function(){
-	return new Url(this.url + '&rand=' + this._getRandomNumber());
+	return new Url(this.url + '?rand=' + this._getRandomNumber());
 };
 
-Url.prototype.withoutBlock = function(){
-	return new Url(this.url + '&init=true');
-};
 
 Url.prototype._getRandomNumber = function(){
 	return (((1+Math.random())*0x10000)|0).toString(16).substring(1);

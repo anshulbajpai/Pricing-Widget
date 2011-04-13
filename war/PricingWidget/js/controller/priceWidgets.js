@@ -9,8 +9,10 @@ PriceWidgets.prototype.reset = function(){
 };
 
 PriceWidgets.prototype.update = function(pricingModel){	
+	console.time('PriceWidgets'); 
 	for(var i = 0; i < this.priceWidgets.length; i++) {
 		this.priceWidgets[i].update(pricingModel);
 	}
+	console.timeEnd('PriceWidgets');
 	delete pricingModel;
 };

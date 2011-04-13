@@ -1,7 +1,6 @@
 var PriceChart = function (containerId) {
     this.data = this._createFreshPriceChartViewModel();
     this.containerId = containerId;
-    this.chartRendered = false;
     this.priceChart =  null;
     this.priceChartTicks = null;
 };
@@ -22,19 +21,20 @@ PriceChart.prototype._createFreshPriceChartViewModel = function(){
 };
 
 PriceChart.prototype.drawChart = function(tickDecimals) {
-	var chartFragment = document.createDocumentFragment();
-	var chartDivTag = document.createElement('div');
-	chartFragment.appendChild(chartDivTag);
 	var data = this.data.getData();
 	var lastSeriesData = data.dataPoints[data.dataPoints.length -1];
 	this.yaxisBounds = this._getYaxisBounds(lastSeriesData);
 	
 	var ticks = this._prepareTicks(tickDecimals);
-	this._insertTicks(ticks, chartDivTag);
-	this._drawPoints(data.dataPoints, chartDivTag);
+	var chartInnerHtml = this._createTicksAndLines(ticks);
+	chartInnerHtml += this._drawPoints(data.dataPoints, chartDivTag);
+
+	var chartFragment = document.createDocumentFragment();
+	var chartDivTag = document.createElement('div');
+	chartFragment.appendChild(chartDivTag);
+	chartDivTag.innerHTML = chartInnerHtml;
 
 	this._getPriceChart().replaceChild(chartFragment, this._getPriceChart().firstChild);
-	this.chartRendered = true;
 };
 
 PriceChart.prototype._getYaxisBounds = function(lastSeriesData){
@@ -74,20 +74,19 @@ PriceChart.prototype._drawPoint = function(dataPoint, color, noOfSeries, chartDi
     x = xCoord;
     y = this._getYCoordinateFrom(parseFloat(dataPoint.price)) - 1.5;
     var point = this._createPoint(x, y, dataPoint, color, bestPrices);
-    chartDivTag.appendChild(point);
+    return point;
 };
 
 PriceChart.prototype._createPoint = function(x, y, dataPoint, color, bestPrices) {
 	var price = parseFloat(dataPoint.price);
-	var point = document.createElement("div");
-	$(point).addClass("point").css("left", x+"px").css("top", y+"px");
 	var backgroundColor = null;
 	if(dataPoint.isAskPoint) {
 		backgroundColor = (price <= parseFloat(bestPrices.bestBidPrice)) ? "rgb(0, 192, 0)" : "rgb(0, 0, 255)";
 	} else {
 		backgroundColor = (price >= parseFloat(bestPrices.bestAskPrice)) ? "rgb(0, 192, 0)" :  "rgb(255, 0, 0)";
 	}
-	$(point).css("backgroundColor", backgroundColor).fadeTo(0, dataPoint.colorFactor);
+	var style = "left:" + x + "px; top:" + y + "px; background-color:" + backgroundColor + "; opacity: " + dataPoint.colorFactor;
+	var point = "<div class='point' style='" + style + "'></div>" 
 	return point;
 };
 
@@ -109,7 +108,9 @@ PriceChart.prototype._prepareTicks = function(tickDecimals){
 	return ticks;
 };
 
-PriceChart.prototype._insertTicks = function(ticks, chartDivTag){
+PriceChart.prototype._createTicksAndLines = function(ticks){
+	var tickLines = "";
+	var tickLabels = "";
 	var priceChartWidth = $(this._getPriceChart()).width();
 	var chartTicksFragment = document.createDocumentFragment();
 	var chartTicksDivTag = document.createElement("div");
@@ -117,22 +118,23 @@ PriceChart.prototype._insertTicks = function(ticks, chartDivTag){
 	for (var i = 0; i < ticks.length; ++i) {
         var tick = ticks[i];
         var y = this._getYCoordinateFrom(tick.value);
-        this._drawTickLabel(tick.label, y-5, i, chartTicksDivTag);
-        this._drawLine(y, priceChartWidth, chartDivTag);
+        tickLabels += this._createTickLabel(tick.label, y-5, i);
+        tickLines += this._createLine(y, priceChartWidth);
     }
+	chartTicksDivTag.innerHTML = tickLabels;
 	this._getPriceChartTicks().replaceChild(chartTicksFragment, this._getPriceChartTicks().firstChild);
+	return tickLines;
 };
 
-PriceChart.prototype._drawTickLabel = function(label, y, index, chartTicksDivTag){
-	var tickLabel = document.createElement("div");
-	$(tickLabel).attr("id", "tickLabel" + index).addClass("tick-label").css("top", y + "px").text(label);
-	chartTicksDivTag.appendChild(tickLabel);
+PriceChart.prototype._createTickLabel = function(label, y, index, chartTicksDivTag){
+	var tickLabel = "<div id='tickLabel"+ index +"' class='tick-label' style='top: "+ y +"px'>"+ label +"</div>";
+	return tickLabel;
 };
 
-PriceChart.prototype._drawLine = function(y, lineWidth, chartDivTag){
-	var line = document.createElement("div");
-	$(line).addClass("line").css("top", y + "px").css("width", lineWidth + "px");
-	chartDivTag.appendChild(line);
+PriceChart.prototype._createLine = function(y, lineWidth, chartDivTag){
+	var style = "top: " + y + "px; width: " + lineWidth + "px"; 
+	var line = "<div class='line' style='" + style + "'></div>"
+	return line;
 };
 
 PriceChart.prototype._getPriceChart = function() {
@@ -150,6 +152,7 @@ PriceChart.prototype._getPriceChartTicks = function() {
 };
 
 PriceChart.prototype._drawPoints = function (dataPoints, chartDivTag) {
+	var points = "";
 	for (var i = 0; i < dataPoints.length; i++) {
         series = dataPoints[i];
         var bestPrices = this._getBestPrices(series);
@@ -157,10 +160,11 @@ PriceChart.prototype._drawPoints = function (dataPoints, chartDivTag) {
         	var dataPoint = series[j];
         	var price = parseFloat(dataPoint.price);
         	if(this.yaxisBounds.minY <= price && price <= this.yaxisBounds.maxY) {
-        		this._drawPoint(dataPoint, series.color, dataPoints.length, chartDivTag, bestPrices);
+        		points += this._drawPoint(dataPoint, series.color, dataPoints.length, chartDivTag, bestPrices);
         	}
         }
     }
+	return points;
 };
 
 PriceChart.prototype._getSpreadPoints = function(bestAskPrice, bestBidPrice) {

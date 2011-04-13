@@ -6,7 +6,7 @@ var AjaxWrapper = function(){
 AjaxWrapper.prototype.sendContinousRequest = function(urlTemplate, successCallBack, callerReference){
 	this.canFireRequest = true;
 	this.urlTemplate = urlTemplate;
-	this._sendContinousRequest(this.urlTemplate.randomize().withoutBlock().value(), successCallBack, callerReference);
+	this._sendContinousRequest(this.urlTemplate.randomize().value(), successCallBack, callerReference);
 };
 
 AjaxWrapper.prototype._sendContinousRequest = function(url, successCallBack, callerReference){	
