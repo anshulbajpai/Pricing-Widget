@@ -24,15 +24,16 @@ PriceChart.prototype.drawChart = function(tickDecimals) {
 	var data = this.data.getData();
 	var lastSeriesData = data.dataPoints[data.dataPoints.length -1];
 	this.yaxisBounds = this._getYaxisBounds(lastSeriesData);
-	
 	var ticks = this._prepareTicks(tickDecimals);
-	var chartInnerHtml = this._createTicksAndLines(ticks);
-	chartInnerHtml += this._drawPoints(data.dataPoints, chartDivTag);
+	var chartInnerHtml = new StringBuilder();
+	
+	this._createTicksAndLines(ticks, chartInnerHtml);
+	this._drawPoints(data.dataPoints, chartInnerHtml);
 
 	var chartFragment = document.createDocumentFragment();
 	var chartDivTag = document.createElement('div');
 	chartFragment.appendChild(chartDivTag);
-	chartDivTag.innerHTML = chartInnerHtml;
+	chartDivTag.innerHTML = chartInnerHtml.toString();
 
 	this._getPriceChart().replaceChild(chartFragment, this._getPriceChart().firstChild);
 };
@@ -67,7 +68,7 @@ PriceChart.prototype._getBestPrices = function(series){
     }
 };
 
-PriceChart.prototype._drawPoint = function(dataPoint, color, noOfSeries, chartDivTag, bestPrices) {
+PriceChart.prototype._drawPoint = function(dataPoint, color, noOfSeries, bestPrices) {
 	var priceChartWidth = $(this._getPriceChart()).width();
     var x,y;
     var xCoord = priceChartWidth - ((noOfSeries - dataPoint.seriesNumber)*3) ;
@@ -85,8 +86,12 @@ PriceChart.prototype._createPoint = function(x, y, dataPoint, color, bestPrices)
 	} else {
 		backgroundColor = (price >= parseFloat(bestPrices.bestAskPrice)) ? "rgb(0, 192, 0)" :  "rgb(255, 0, 0)";
 	}
-	var style = "left:" + x + "px; top:" + y + "px; background-color:" + backgroundColor + "; opacity: " + dataPoint.colorFactor;
-	var point = "<div class='point' style='" + style + "'></div>" 
+	var style = new StringBuilder();
+	style.append("left:" + x + "px;").append("top:" + y + "px;")
+		 .append("background-color:" + backgroundColor + ";")
+		 .append("opacity: " + dataPoint.colorFactor + ";")
+		 .append("filter: alpha(opacity="+ dataPoint.colorFactor*100 + ")");
+	var point = "<div class='point' style='" + style.toString() + "'></div>" 
 	return point;
 };
 
@@ -108,9 +113,8 @@ PriceChart.prototype._prepareTicks = function(tickDecimals){
 	return ticks;
 };
 
-PriceChart.prototype._createTicksAndLines = function(ticks){
-	var tickLines = "";
-	var tickLabels = "";
+PriceChart.prototype._createTicksAndLines = function(ticks, chartInnerHtml){
+	var tickLabels = new StringBuilder();
 	var priceChartWidth = $(this._getPriceChart()).width();
 	var chartTicksFragment = document.createDocumentFragment();
 	var chartTicksDivTag = document.createElement("div");
@@ -118,15 +122,15 @@ PriceChart.prototype._createTicksAndLines = function(ticks){
 	for (var i = 0; i < ticks.length; ++i) {
         var tick = ticks[i];
         var y = this._getYCoordinateFrom(tick.value);
-        tickLabels += this._createTickLabel(tick.label, y-5, i);
-        tickLines += this._createLine(y, priceChartWidth);
+        tickLabels.append(this._createTickLabel(tick.label, y-5, i));
+        chartInnerHtml.append(this._createLine(y, priceChartWidth));
     }
-	chartTicksDivTag.innerHTML = tickLabels;
+	chartTicksDivTag.innerHTML = tickLabels.toString();
 	this._getPriceChartTicks().replaceChild(chartTicksFragment, this._getPriceChartTicks().firstChild);
-	return tickLines;
 };
 
 PriceChart.prototype._createTickLabel = function(label, y, index, chartTicksDivTag){
+	var tickLabel = new StringBuilder();
 	var tickLabel = "<div id='tickLabel"+ index +"' class='tick-label' style='top: "+ y +"px'>"+ label +"</div>";
 	return tickLabel;
 };
@@ -151,8 +155,7 @@ PriceChart.prototype._getPriceChartTicks = function() {
 	return this.priceChartTicks;
 };
 
-PriceChart.prototype._drawPoints = function (dataPoints, chartDivTag) {
-	var points = "";
+PriceChart.prototype._drawPoints = function (dataPoints, chartInnerHtml) {
 	for (var i = 0; i < dataPoints.length; i++) {
         series = dataPoints[i];
         var bestPrices = this._getBestPrices(series);
@@ -160,11 +163,10 @@ PriceChart.prototype._drawPoints = function (dataPoints, chartDivTag) {
         	var dataPoint = series[j];
         	var price = parseFloat(dataPoint.price);
         	if(this.yaxisBounds.minY <= price && price <= this.yaxisBounds.maxY) {
-        		points += this._drawPoint(dataPoint, series.color, dataPoints.length, chartDivTag, bestPrices);
+        		chartInnerHtml.append(this._drawPoint(dataPoint, series.color, dataPoints.length, bestPrices));
         	}
         }
     }
-	return points;
 };
 
 PriceChart.prototype._getSpreadPoints = function(bestAskPrice, bestBidPrice) {
