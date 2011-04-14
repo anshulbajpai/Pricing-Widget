@@ -64,15 +64,17 @@ PriceWidgetController.prototype.updateInstrumentTable = function(response){
 PriceWidgetController.prototype.createTableFragment = function(instruments) {
 	var fragment = document.createDocumentFragment();
 	var tableTag = document.createElement("table");
+	var tableBody = document.createElement("tbody");
+	tableTag.appendChild(tableBody);
 	fragment.appendChild(tableTag);
-	this._addHeadersToTable(tableTag, tableHeaderTitles);
+	this._addHeadersToTable(tableBody, tableHeaderTitles);
 	for (var i = 0, size = instruments.length; i < size; i++)
 	{
-		this._addInstrumentToTable(tableTag, instruments[i], i);
+		this._addInstrumentToTable(tableBody, instruments[i], i);
 	}
 	if(instruments.length < 10) {
 		for(var i = instruments.length; i < 10; i++){
-			this._addEmptyRowToInstrumentTable(tableTag, i);
+			this._addEmptyRowToInstrumentTable(tableBody, i);
 		}
 	}
 	return fragment;
@@ -86,7 +88,7 @@ PriceWidgetController.prototype._addHeadersToTable = function(tableTag, headers)
 	for (var i = 0, size = headers.length; i < size; i++)
 	{
 		var tableHeaderDataTag = document.createElement("td");
-		tableHeaderDataTag.setAttribute("class", "table_header");
+		tableHeaderDataTag.className = "table_header";
 		tableHeaderTag.appendChild(tableHeaderDataTag);
 		tableHeaderDataTag.appendChild(document.createTextNode(headers[i]));
 	}
@@ -94,7 +96,7 @@ PriceWidgetController.prototype._addHeadersToTable = function(tableTag, headers)
 
 PriceWidgetController.prototype._addInstrumentToTable = function(tableTag, instrument, rowIndex) {
 	var rowTag = document.createElement("tr");
-	rowTag.setAttribute("class", (0 == rowIndex % 2) ? "even_row" : "odd_row");
+	rowTag.className = (0 == rowIndex % 2) ? "even_row" : "odd_row";
 	tableTag.appendChild(rowTag);
 
 	rowTag.instrumentId = instrument.orderBookId;
@@ -109,11 +111,11 @@ PriceWidgetController.prototype._addInstrumentToTable = function(tableTag, instr
 	}
 	
 	var instrumentNameCell = document.createElement("td");
-	instrumentNameCell.setAttribute("class", "instrument_column");
+	instrumentNameCell.className = "instrument_column";
 
 	rowTag.appendChild(instrumentNameCell);
 	var rowImg = document.createElement("img");
-	rowImg.setAttribute("class", "status_img");
+	rowImg.className = "status_img";
 	rowImg.src = baseUrl + instrument.status + ".png";
 	instrumentNameCell.appendChild(rowImg);
 	
@@ -129,20 +131,20 @@ PriceWidgetController.prototype._addInstrumentToTable = function(tableTag, instr
 	{
 		spreadClasses += " choice_market";
 	}
-	spreadCell.setAttribute("class", spreadClasses);
+	spreadCell.className = spreadClasses;
 };
 
 PriceWidgetController.prototype._addEmptyRowToInstrumentTable = function(tableTag, rowIndex) {
 	var rowTag = document.createElement("tr");
-	rowTag.setAttribute("class", (0 == rowIndex % 2) ? "even_row" : "odd_row");
+	rowTag.className = 0 == rowIndex % 2 ? "even_row" : "odd_row";
 	tableTag.appendChild(rowTag);
 
 	var instrumentNameCell = document.createElement("td");
-	instrumentNameCell.setAttribute("class", "instrument_column");
+	instrumentNameCell.className = "instrument_column";
 	rowTag.appendChild(instrumentNameCell);
 	
 	var spreadCell = document.createElement("td");
-	spreadCell.setAttribute("class", "spread_column");
+	spreadCell.className = "spread_column";
 	rowTag.appendChild(spreadCell);
 };
 

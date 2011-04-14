@@ -3,6 +3,8 @@ var PriceChart = function (containerId) {
     this.containerId = containerId;
     this.priceChart =  null;
     this.priceChartTicks = null;
+    this.width = null;
+    this.height = null;
 };
 
 PriceChart.prototype.MAX_SERIES = 69;
@@ -24,6 +26,7 @@ PriceChart.prototype.drawChart = function(tickDecimals) {
 	var data = this.data.getData();
 	var lastSeriesData = data.dataPoints[data.dataPoints.length -1];
 	this.yaxisBounds = this._getYaxisBounds(lastSeriesData);
+
 	var ticks = this._prepareTicks(tickDecimals);
 	var chartInnerHtml = new StringBuilder();
 	
@@ -54,6 +57,7 @@ PriceChart.prototype._getYaxisBounds = function(lastSeriesData){
 	} else {
 		totalScale = (spread/spreadPoints * 100);
 	}
+
 	return {maxY : averageBestPrice + totalScale/2, minY : averageBestPrice - totalScale/2};
 };
 
@@ -69,7 +73,7 @@ PriceChart.prototype._getBestPrices = function(series){
 };
 
 PriceChart.prototype._drawPoint = function(dataPoint, color, noOfSeries, bestPrices) {
-	var priceChartWidth = $(this._getPriceChart()).width();
+	var priceChartWidth = this._getWidth();
     var x,y;
     var xCoord = priceChartWidth - ((noOfSeries - dataPoint.seriesNumber)*3) ;
     x = xCoord;
@@ -96,7 +100,7 @@ PriceChart.prototype._createPoint = function(x, y, dataPoint, color, bestPrices)
 };
 
 PriceChart.prototype._getYCoordinateFrom = function(price){
-	var priceChartHeight = $(this._getPriceChart()).height();
+	var priceChartHeight = this._getHeight();
 	return priceChartHeight - (priceChartHeight*((price - this.yaxisBounds.minY)/(this.yaxisBounds.maxY- this.yaxisBounds.minY)));
 };
 
@@ -115,7 +119,7 @@ PriceChart.prototype._prepareTicks = function(tickDecimals){
 
 PriceChart.prototype._createTicksAndLines = function(ticks, chartInnerHtml){
 	var tickLabels = new StringBuilder();
-	var priceChartWidth = $(this._getPriceChart()).width();
+	var priceChartWidth = this._getWidth();
 	var chartTicksFragment = document.createDocumentFragment();
 	var chartTicksDivTag = document.createElement("div");
 	chartTicksFragment.appendChild(chartTicksDivTag);
@@ -175,9 +179,8 @@ PriceChart.prototype._getSpreadPoints = function(bestAskPrice, bestBidPrice) {
 	var bestAskPriceInt = this._getInt(bestAskPrice, fixedPointPrecision);
 	var bestBidPriceInt = this._getInt(bestBidPrice, fixedPointPrecision);
 	var range =  Math.abs(bestAskPriceInt - bestBidPriceInt);
-	if(range > 0) {
-		var rangeStr = range.toString(); 
-		var spreadPoints = rangeStr.substring(0, rangeStr.length - 1) + "." + rangeStr[rangeStr.length - 1];
+	if(range > 0) {		
+		var spreadPoints = range/10;
 		return parseFloat(spreadPoints);
 	}
 	return 0;
@@ -187,5 +190,19 @@ PriceChart.prototype._getInt = function(value, dp) {
 	var point = value !== null ? value.indexOf('.') : -1;
 	var intValue = dp == 0 ? parseInt(value, 10) : parseInt(value.substring(0, point) + value.substring(point + 1), 10);
 	return intValue;
+};
+
+PriceChart.prototype._getWidth = function() {
+	if(!this.width) {
+		this.width =  $(this._getPriceChart()).width();
+	}
+	return this.width;
+};
+
+PriceChart.prototype._getHeight = function() {
+	if(!this.height) {
+		this.height =  $(this._getPriceChart()).height();
+	}
+	return this.height;
 };
 

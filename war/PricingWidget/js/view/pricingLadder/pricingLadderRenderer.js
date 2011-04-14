@@ -53,29 +53,33 @@ PricingLadderRenderer.prototype._createTableFragement = function(askSteps, bidSt
 	pricingLadderTable.append(this._createHeader());
 	var tableBody = $('<tbody>'); 
 	pricingLadderTable.append(tableBody);
-	this._createAskStepsFrom(askSteps, tableBody, bestBidPrice);
-	this._createBidStepsFrom(bidSteps, tableBody, bestAskPrice);	
+	
+	var tableBodyInnerHtml = new StringBuilder();
+	this._createAskStepsFrom(askSteps, tableBodyInnerHtml, bestBidPrice);
+	this._createBidStepsFrom(bidSteps, tableBodyInnerHtml, bestAskPrice);
+	tableBody.html(tableBodyInnerHtml.toString());
+	
+	this._markBestPriceRowAsYellow(tableBody[0].rows[4]);
+	this._markBestPriceRowAsYellow(tableBody[0].rows[5]);
 	this._decorateLadderSteps($(tableBody.children()))
 	return fragment;
 };
 
-PricingLadderRenderer.prototype._createAskStepsFrom = function(steps, tableBody, bestBidPrice){
+PricingLadderRenderer.prototype._createAskStepsFrom = function(steps, tableBodyInnerHtml, bestBidPrice){
 	if(steps.length < 5) {
-		this._addEmptyStepRows(5 - steps.length, tableBody);
+		this._addEmptyStepRows(5 - steps.length, tableBodyInnerHtml);
 	}
-	this._createStepsFrom(steps, true, tableBody, bestBidPrice);
-	this._markBestPriceRowAsYellow(tableBody[0].rows[4]);
+	this._createStepsFrom(steps, true, tableBodyInnerHtml, bestBidPrice);
 };
 
 PricingLadderRenderer.prototype._markBestPriceRowAsYellow = function(bestPriceRow){
 	$(bestPriceRow).addClass("best_price_row");
 }
-PricingLadderRenderer.prototype._createBidStepsFrom = function(steps, tableBody, bestAskPrice){
-	this._createStepsFrom(steps, false, tableBody, bestAskPrice);
+PricingLadderRenderer.prototype._createBidStepsFrom = function(steps, tableBodyInnerHtml, bestAskPrice){
+	this._createStepsFrom(steps, false, tableBodyInnerHtml, bestAskPrice);
 	if(steps.length < 5) {
-		this._addEmptyStepRows(5 - steps.length, tableBody);
+		this._addEmptyStepRows(5 - steps.length, tableBodyInnerHtml);
 	}
-	this._markBestPriceRowAsYellow(tableBody[0].rows[5]);
 };
 
 PricingLadderRenderer.prototype._decorateLadderSteps = function(pricingLadderRows){
@@ -101,59 +105,64 @@ PricingLadderRenderer.prototype._createHeaderCell = function(value){
 	return headerCell;
 };
 
-PricingLadderRenderer.prototype._createStepsFrom = function(steps, isAskSteps, tableBody, bestPrice){
+PricingLadderRenderer.prototype._createStepsFrom = function(steps, isAskSteps, tableBodyInnerHtml, bestPrice){
 	var that = this;
 	for(var i = 0; i < steps.length; i++) {
 		var step = steps[i];
 		var stepRow = that._createStepRowFrom(step, isAskSteps, bestPrice);
-		tableBody.append(stepRow);
+		tableBodyInnerHtml.append(stepRow);
 	}
 };
 
-PricingLadderRenderer.prototype._addEmptyStepRows = function(noOfRows, tableBody){
+PricingLadderRenderer.prototype._addEmptyStepRows = function(noOfRows, tableBodyInnerHtml){
 	for(var i = 0; i < noOfRows; i++) {
-		tableBody.append(this._createEmptyStepRow());
+		tableBodyInnerHtml.append(this._createEmptyStepRow());
 	}
 };
 
 PricingLadderRenderer.prototype._createEmptyStepRow = function(){
-	var emptyRow = $('<tr>');
+	var emptyRow = new StringBuilder();
+	emptyRow.append("<tr>");
 	emptyRow.append(this._createStepCellFrom('','buy_column'));
 	emptyRow.append(this._createStepCellFrom(''));
 	emptyRow.append(this._createStepCellFrom('', 'sell_column'));
-	return emptyRow;
+	return emptyRow.toString();
 };
 
 PricingLadderRenderer.prototype._createStepRowFrom = function(step, isAskStep, bestPrice){
-	var stepRow = $('<tr>');
+	var stepRow = new StringBuilder();
+	stepRow.append('<tr>');
 	if(isAskStep){
 		stepRow.append(this._createStepCellFrom('','buy_column'));
 
 		var priceCell = this._createStepCellFrom(step.price, 'price_column');
 		stepRow.append(priceCell);
 		
-		var quantityCell = this._createStepCellFrom(step.quantity, 'sell_column');
+		var quantityCellClass = "sell_column"; 
+		step.price <= bestPrice ? quantityCellClass+=" greenColor" : "";
+		step.priceChanged ? quantityCellClass+=' sell_move' : "";
+		var quantityCell = this._createStepCellFrom(step.quantity, quantityCellClass);
 		stepRow.append(quantityCell);
-		(step.price <= bestPrice) && quantityCell.addClass('greenColor');
-		step.priceChanged && quantityCell.addClass('sell_move');
 	}
 	else {
-		var quantityCell = this._createStepCellFrom(step.quantity, 'buy_column');
+		var quantityCellClass = "buy_column"; 
+		step.price >= bestPrice ? quantityCellClass+=" greenColor" : "";
+		step.priceChanged ? quantityCellClass+=' buy_move' : "";
+		var quantityCell = this._createStepCellFrom(step.quantity, quantityCellClass);
 		stepRow.append(quantityCell);
-		(step.price >= bestPrice) && quantityCell.addClass('greenColor');
+		
 		
 		var priceCell = this._createStepCellFrom(step.price, 'price_column');
 		stepRow.append(priceCell);
 		
 		stepRow.append(this._createStepCellFrom('', 'sell_column'));
-		step.priceChanged && quantityCell.addClass('buy_move');
 	}
-	return stepRow;
+	stepRow.append('</tr>')
+	return stepRow.toString();
 };
 
 PricingLadderRenderer.prototype._createStepCellFrom = function(value, className){
-	var stepCell = $('<td>');
-	stepCell.addClass(className).append(document.createTextNode(value));
+	var stepCell = "<td class='"+ className +"'>" + value + "</td>" 
 	return stepCell;
 };
 

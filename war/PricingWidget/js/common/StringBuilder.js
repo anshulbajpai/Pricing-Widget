@@ -1,4 +1,4 @@
-function StringBuilder(value)
+var StringBuilder = function(value)
 {
     this.strings = new Array("");
     this.append(value);
