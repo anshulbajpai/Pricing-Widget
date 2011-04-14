@@ -34,7 +34,6 @@ PriceWidgetController.prototype._getResponse = function(){
 };
 
 PriceWidgetController.prototype._successCallback = function(response, counter){
-	console.time('successCallback' + counter);
 	var trimmedText = response.trim();
 	if (trimmedText.length > 0)
 	{
@@ -43,7 +42,6 @@ PriceWidgetController.prototype._successCallback = function(response, counter){
 		this.priceDataContainer.add(currentPricingModel);
 		this.updateInstrumentTable(trimmedText);
 	}
-	console.timeEnd('successCallback'+counter);	
 };
 
 PriceWidgetController.prototype._getInstrumentResponse = function(response){	
@@ -102,12 +100,12 @@ PriceWidgetController.prototype._addInstrumentToTable = function(tableTag, instr
 	rowTag.instrumentId = instrument.orderBookId;
 	rowTag.status = instrument.status;
 
-	$(rowTag).hover(mouseEnterOnInstrument, mouseLeaveOnInstrument);
 	var that = this;
+	$(rowTag).hover(function(){that.mouseEnterOnInstrument(this)}, function(){that.mouseLeaveOnInstrument(this)});
 	$(rowTag).click(function(){that.handleClickForInstrument(this);});	
 	
 	if(this.selectedInstrument && instrument.orderBookId == this.selectedInstrument.instrumentId){
-		$(rowTag).addClass(getInstrumentClickClass());		
+		$(rowTag).addClass(this.getInstrumentClickClass());		
 	}
 	
 	var instrumentNameCell = document.createElement("td");
@@ -157,15 +155,31 @@ PriceWidgetController.prototype._getDisplayDiv = function() {
 
 PriceWidgetController.prototype.handleClickForInstrument = function(instrumentRow){
 	if(this.selectedInstrument){
-		$(this.selectedInstrument).removeClass(getInstrumentClickClass());		
+		$(this.selectedInstrument).removeClass(this.getInstrumentClickClass());		
 	}
 	this.selectedInstrument = instrumentRow;
-	$(this.selectedInstrument).removeClass(getInstrumentHoverClass());	
-	$(this.selectedInstrument).addClass(getInstrumentClickClass());	
-	if(this.status == "Closed"){
-		priceWidgetController.reset();
+	$(this.selectedInstrument).removeClass(this.getInstrumentHoverClass());	
+	$(this.selectedInstrument).addClass(this.getInstrumentClickClass());	
+	if(instrumentRow.status == "Closed"){
+		this.reset();
 	}
 	else{
-		priceWidgetController.show(this.selectedInstrument.instrumentId);
+		this.show(this.selectedInstrument.instrumentId);
 	}
 };
+
+PriceWidgetController.prototype.getInstrumentHoverClass = function(){
+	return 'instrument_column_hover';
+}
+
+PriceWidgetController.prototype.getInstrumentClickClass = function(){
+	return 'selected_instrument';
+}
+
+PriceWidgetController.prototype.mouseEnterOnInstrument = function(instrumentRow){
+	$(instrumentRow).addClass(this.getInstrumentHoverClass());	
+}
+
+PriceWidgetController.prototype.mouseLeaveOnInstrument = function(instrumentRow){
+	$(instrumentRow).removeClass(this.getInstrumentHoverClass());	
+}
