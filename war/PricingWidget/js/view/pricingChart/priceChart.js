@@ -48,7 +48,14 @@ PriceChart.prototype._getYaxisBounds = function(lastSeriesData){
 	
 	var spread = Math.abs(parseFloat(bestPrices.bestAskPrice) - parseFloat(bestPrices.bestBidPrice));
 	if(spread == 0) {
-		return this.yaxisBounds;
+		if(this.yaxisBounds) {
+			return this.yaxisBounds;
+		}
+		var maxPrice = parseFloat(lastSeriesData[0].price)
+		var minPrice = parseFloat(lastSeriesData[lastSeriesData.length - 1].price);
+		var bestAskPrice = parseFloat(bestPrices.bestAskPrice);
+		gap = (maxPrice - bestAskPrice > bestAskPrice - minPrice)? maxPrice - bestAskPrice : bestAskPrice - minPrice;
+		return {maxY : bestAskPrice + gap, minY : bestAskPrice - gap};
 	}
 	var spreadPoints = this._getSpreadPoints(bestPrices.bestAskPrice, bestPrices.bestBidPrice);
 	var totalScale;
@@ -161,7 +168,7 @@ PriceChart.prototype._drawPoints = function (dataPoints, chartInnerHtml) {
         for (var j = 0; j < series.length; j++) {   
         	var dataPoint = series[j];
         	var price = parseFloat(dataPoint.price);
-        	if(this.yaxisBounds.minY <= price && price <= this.yaxisBounds.maxY) {
+        	if(this.yaxisBounds.minY < price && price < this.yaxisBounds.maxY) {
         		chartInnerHtml.append(this._drawPoint(dataPoint, series.color, dataPoints.length, bestPrices));
         	}
         }
@@ -196,7 +203,7 @@ PriceChart.prototype._getWidth = function() {
 
 PriceChart.prototype._getHeight = function() {
 	if(!this.height) {
-		this.height =  $(this._getPriceChart()).height();
+		this.height =  $(this._getPriceChart()).height() - 6;
 	}
 	return this.height;
 };
