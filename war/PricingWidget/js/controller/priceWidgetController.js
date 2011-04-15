@@ -8,7 +8,6 @@ var PriceWidgetController = function(urlTemplate, ajaxWrapper, pricingDataParser
 	this.priceDataContainer = new PriceDataContainer(this._updateWidgets, this);
 	this.displayDiv = null;
 	this.selectedInstrument = null
-	this.cnt = 0;
 };
 
 PriceWidgetController.prototype._updateWidgets = function(pricingModel){
@@ -30,10 +29,14 @@ PriceWidgetController.prototype.reset = function() {
 };
 
 PriceWidgetController.prototype._getResponse = function(){
-	this.ajaxWrapper.sendContinousRequest(this.urlTemplate, function(response){this._successCallback(response, this.cnt++)}, this);
+	this.ajaxWrapper.sendContinousRequest(this.urlTemplate, function(response){this._successCallback(response)}, this);
 };
 
-PriceWidgetController.prototype._successCallback = function(response, counter){
+PriceWidgetController.prototype._sendRequestToUpdateInstruments = function(){
+	this.ajaxWrapper.sendContinousRequest(this.urlTemplate, function(response){this.updateInstrumentTable(response.trim())}, this);
+};
+
+PriceWidgetController.prototype._successCallback = function(response){
 	var trimmedText = response.trim();
 	if (trimmedText.length > 0)
 	{
@@ -162,8 +165,9 @@ PriceWidgetController.prototype.handleClickForInstrument = function(instrumentRo
 	this.selectedInstrument = instrumentRow;
 	$(this.selectedInstrument).removeClass(this.getInstrumentHoverClass());	
 	$(this.selectedInstrument).addClass(this.getInstrumentClickClass());	
+	this.reset();
 	if(instrumentRow.status == "Closed"){
-		this.reset();
+		this._sendRequestToUpdateInstruments();
 	}
 	else{
 		this.show(this.selectedInstrument.instrumentId);

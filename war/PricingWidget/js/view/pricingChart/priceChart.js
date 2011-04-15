@@ -1,10 +1,9 @@
 var PriceChart = function (containerId) {
     this.data = this._createFreshPriceChartViewModel();
     this.containerId = containerId;
-    this.priceChart =  null;
-    this.priceChartTicks = null;
     this.width = null;
     this.height = null;
+    this.yaxisBounds = null;
 };
 
 PriceChart.prototype.MAX_SERIES = 69;
@@ -14,7 +13,9 @@ PriceChart.prototype.setDataPoint = function(seriesNumber, pointId, dataPoint) {
 };
 	
 PriceChart.prototype.reset = function(){
+	delete this.data.itsProperties;
 	delete this.data;
+	delete this.yaxisBounds;
 	this.data = this._createFreshPriceChartViewModel();
 };
 
@@ -146,17 +147,11 @@ PriceChart.prototype._createLine = function(y, lineWidth, chartDivTag){
 };
 
 PriceChart.prototype._getPriceChart = function() {
-	if(!this.priceChart) {
-		this.priceChart = document.getElementById("price-chart");
-	}
-	return this.priceChart;
+	return document.getElementById("price-chart");
 };
 
 PriceChart.prototype._getPriceChartTicks = function() {
-	if(!this.priceChartTicks) {
-		this.priceChartTicks = document.getElementById("price-chart-ticks");
-	}
-	return this.priceChartTicks;
+	return document.getElementById("price-chart-ticks");
 };
 
 PriceChart.prototype._drawPoints = function (dataPoints, chartInnerHtml) {

@@ -20,7 +20,8 @@ PriceChartViewModel.prototype._shiftSeriesIfFull = function(seriesNumber, pointI
 	if(pointId == 0 && this._hasMaxSeriesReached()){
 		var firstSeries = this.data[0]; 
 		this.data.shift();
-		this.data.push([]);		
+		this.data.push([]);	
+		delete firstSeries.itsProperties;
 		delete firstSeries;
 	}
 };
